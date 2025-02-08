@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>XRPL Charities - Direct Donation</title>
-  <!-- XRPL.js deferred -->
-  <script src="https://cdn.jsdelivr.net/npm/xrpl@latest" defer></script>
+  <title>XRPL Charities - Direct Donation via QR Code</title>
+  <!-- XRPL.js -->
+  <script src="https://cdn.jsdelivr.net/npm/xrpl@latest"></script>
+  <!-- QRCode.js Library for generating QR codes -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
   <style>
     /* GLOBAL RESETS */
     * {
@@ -13,16 +15,14 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     /* BODY + FONT */
     body {
       font-family: "Helvetica Neue", Arial, sans-serif;
-      background-color: #0f172a; /* Dark bluish background */
-      color: #e2e8f0;           /* Light grayish-blue text */
+      background-color: #0f172a;
+      color: #e2e8f0;
       min-height: 100vh;
       overflow: auto;
     }
-
     /* FULLSCREEN CANVAS BACKGROUND */
     #background-canvas {
       position: fixed;
@@ -31,29 +31,26 @@
       width: 100vw;
       height: 100vh;
       z-index: -1;
-      background: #0f172a; /* fallback color */
+      background: #0f172a;
     }
-
     /* HEADER */
     header {
       text-align: center;
       padding: 1rem;
-      background: rgba(255, 255, 255, 0.05); /* Slightly lighter overlay */
+      background: rgba(255, 255, 255, 0.05);
       margin-bottom: 2rem;
     }
     header h1 {
       font-size: 2rem;
-      color: #93c5fd; /* light blue text color */
+      color: #93c5fd;
       letter-spacing: 1px;
     }
-
     /* PAGE WRAPPER */
     #main-content {
       width: 90%;
       max-width: 1000px;
       margin: 0 auto 4rem auto;
     }
-
     /* ABOUT SECTION */
     #about-section {
       background: rgba(255, 255, 255, 0.05);
@@ -77,7 +74,6 @@
     .multi-currency strong {
       color: #bfdbfe; 
     }
-
     /* CHARITY DETAIL PAGE */
     #charity-detail {
       background: rgba(255, 255, 255, 0.05);
@@ -103,7 +99,6 @@
       font-size: 1rem;
       margin-bottom: 1rem;
     }
-
     /* PROGRESS BAR */
     .progress-bar {
       width: 100%;
@@ -116,7 +111,7 @@
     }
     .progress-bar-fill {
       height: 100%;
-      background-color: #3b82f6; /* Blue fill */
+      background-color: #3b82f6;
       width: 0%;
       transition: width 0.4s ease;
     }
@@ -125,7 +120,6 @@
       font-size: 0.95rem;
       color: #bfdbfe;
     }
-
     /* DONATION INPUTS */
     .donation-input {
       width: 100%;
@@ -146,7 +140,6 @@
       border: 1px solid #3b82f6;
       color: #0f172a;
     }
-
     /* BUTTONS */
     .donation-btn {
       padding: 12px 24px;
@@ -162,7 +155,6 @@
     .donation-btn:hover {
       background-color: #2563eb;
     }
-
     .receipt-btn {
       margin-left: 1rem;
       padding: 10px 20px;
@@ -177,7 +169,14 @@
     .receipt-btn:hover {
       background-color: #0891b2;
     }
-
+    /* QR CODE SECTION */
+    #qr-code-section {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px;
+      text-align: center;
+    }
     /* TRANSACTION CONTAINER */
     #transactions-container {
       margin-top: 2rem;
@@ -214,7 +213,6 @@
     .transaction-item:last-child {
       border-bottom: none;
     }
-
     /* LEADERBOARD */
     #leaderboard {
       margin-top: 1rem;
@@ -238,10 +236,9 @@
     .leaderboard-item:last-child {
       border-bottom: none;
     }
-
     /* TX LIMIT SLIDER + NUMBER */
     #query-limit-container {
-      margin-top: 1rem;
+      margin-top: 2rem;
       text-align: left;
       display: flex;
       align-items: center;
@@ -250,7 +247,6 @@
       background: rgba(255,255,255,0.05);
       padding: 1rem;
       border-radius: 6px;
-      margin-top: 2rem;
     }
     #query-limit-label {
       font-size: 0.95rem;
@@ -268,23 +264,9 @@
       font-size: 0.9rem;
       text-align: center;
     }
-    #set-limit-btn {
-      padding: 8px 16px;
-      background-color: #3b82f6;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background-color 0.2s;
-    }
-    #set-limit-btn:hover {
-      background-color: #2563eb;
-    }
   </style>
 </head>
 <body>
-
   <!-- Blue Particle BG -->
   <canvas id="background-canvas"></canvas>
 
@@ -294,7 +276,6 @@
 
   <!-- MAIN CONTENT -->
   <div id="main-content">
-
     <!-- ABOUT SECTION -->
     <div id="about-section">
       <h2>How It Works</h2>
@@ -325,9 +306,19 @@
       </div>
       <p id="progress-text"></p>
 
+      <!-- Donation Inputs -->
       <input type="number" id="donation-amount" class="donation-input" placeholder="Amount in XRP" />
       <textarea class="memo-input" id="donation-memo" rows="2" placeholder="Memo / Dedication (optional)"></textarea>
-      <button class="donation-btn" id="donation-button">Donate</button>
+      <!-- Generate a QR code for the payment -->
+      <button class="donation-btn" id="generate-qr-btn">Generate Payment QR Code</button>
+      
+      <!-- QR Code Display Section -->
+      <div id="qr-code-section">
+        <h4>Scan this QR Code to Donate</h4>
+        <div id="qr-code-container"></div>
+      </div>
+
+      <!-- (Optional) Receipt and transaction display -->
       <button class="receipt-btn" id="receipt-button" style="display:none;">Download Receipt</button>
 
       <div id="transactions-container">
@@ -346,12 +337,11 @@
       </div>
     </div>
 
-    <!-- WALLET + QUERY LIMIT (Slider + Number) -->
+    <!-- TX LIMIT (Slider + Number) -->
     <div id="query-limit-container">
       <div id="query-limit-label">Tx Limit (1-1000):</div>
       <input type="range" id="query-limit-slider" min="1" max="1000" step="1" value="50" />
       <input type="number" id="query-limit-number" min="1" max="1000" value="50" />
-      <button id="set-limit-btn" onclick="updateQueryLimit()">Set Limit</button>
     </div>
   </div>
 
@@ -376,12 +366,11 @@
         this.vx = (Math.random() - 0.5) * 0.4;
         this.vy = (Math.random() - 0.5) * 0.4;
         this.radius = Math.random() * 2 + 1;
-        this.color = 'rgba(59, 130, 246, 0.6)'; // A nice blue
+        this.color = 'rgba(59, 130, 246, 0.6)';
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        // Wrap around edges
         if (this.x < 0) this.x = canvas.width;
         if (this.x > canvas.width) this.x = 0;
         if (this.y < 0) this.y = canvas.height;
@@ -405,7 +394,6 @@
         p.update();
         p.draw();
       });
-      // Connect lines if within a certain distance
       for (let i = 0; i < particleCount; i++) {
         for (let j = i + 1; j < particleCount; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -424,20 +412,20 @@
       requestAnimationFrame(animateBackground);
     }
     animateBackground();
-    /* ============== End Particle BG ============== */
+    /* ================== End Particle BG ================== */
 
     /* ============== XRPL + Charity Logic ============== */
+    // Set the mainnet endpoint for XRP
+    const XRPL_SERVER = 'wss://s1.ripple.com';
     let queryLimit = 50;
-    let currentWalletSeed = null;
-    let currentWalletAddress = null;
     const txCache = {};
 
-    // Single charity details
+    // Charity details (using the mainnet address)
     const charity = {
       name: 'Charity 1',
       desc: 'Fighting Hunger in Africa',
       blurb: 'We are committed to providing meals and resources to families across Africa. With your help, we can improve health outcomes, promote food security, and drive sustainable change in vulnerable communities.',
-      address: 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
+      address: 'rMdG3ju8pgyVh29ELPWaDuA74CpWW6Fxns',
       goal: 1000,
       totalReceived: 0
     };
@@ -445,55 +433,49 @@
     // Leaderboard data
     const leaderboardData = [];
 
-    // Populate the UI with single charity data
+    // Populate the UI with charity data
     document.getElementById('charity-name').innerText = charity.name;
     document.getElementById('charity-desc').innerText = charity.desc;
     document.getElementById('charity-blurb').innerText = charity.blurb;
 
-    // Donation button
-    const donationBtn = document.getElementById('donation-button');
-    donationBtn.onclick = () => {
-      const amount = Number(document.getElementById('donation-amount').value);
-      const memo = document.getElementById('donation-memo').value;
-      donateXRP(charity.address, amount, memo);
-    };
-
-    // Receipt button hidden by default
-    document.getElementById('receipt-button').style.display = 'none';
-
-    // Listen to transaction filter changes
-    const filters = document.getElementsByName('txfilter');
-    filters.forEach((radio) => {
-      radio.addEventListener('change', () => applyTransactionFilter(charity.address));
+    // ---------------- QR CODE GENERATION ----------------
+    document.getElementById('generate-qr-btn').addEventListener('click', () => {
+      const amount = document.getElementById('donation-amount').value.trim();
+      if (!amount || isNaN(amount) || Number(amount) <= 0) {
+        alert("Please enter a valid donation amount (in XRP).");
+        return;
+      }
+      const memo = document.getElementById('donation-memo').value.trim();
+      // Construct the payment URI using the charity address on mainnet
+      let paymentURI = `xrpl:${charity.address}?amount=${encodeURIComponent(amount)}`;
+      if (memo) {
+        paymentURI += `&memo=${encodeURIComponent(memo)}`;
+      }
+      
+      // Clear any existing QR code
+      const qrContainer = document.getElementById('qr-code-container');
+      qrContainer.innerHTML = "";
+      
+      // Create a new canvas element to host the QR code
+      const canvasElem = document.createElement("canvas");
+      qrContainer.appendChild(canvasElem);
+      
+      // Generate the QR code (200px wide) on the canvas element
+      QRCode.toCanvas(canvasElem, paymentURI, { width: 200 }, function (error) {
+        if (error) {
+          console.error("QR Code generation error:", error);
+          alert("Error generating QR code. Please try again.");
+        }
+      });
     });
+    // ----------------------------------------------------
 
-    // Set up slider + number input sync
-    const queryLimitSlider = document.getElementById('query-limit-slider');
-    const queryLimitNumber = document.getElementById('query-limit-number');
-
-    queryLimitSlider.oninput = function() {
-      queryLimitNumber.value = this.value;
-    };
-    queryLimitNumber.oninput = function() {
-      queryLimitSlider.value = this.value;
-    };
-
-    function updateProgressBar() {
-      const fill = document.getElementById('progress-fill');
-      const progressText = document.getElementById('progress-text');
-      const percent = Math.min(100, (charity.totalReceived / charity.goal) * 100).toFixed(2);
-      fill.style.width = `${percent}%`;
-      progressText.textContent = `Raised ${charity.totalReceived}/${charity.goal} XRP (${percent}%)`;
-    }
-    updateProgressBar();
-
-    // Load the charity's past transactions
+    // Load past transactions for the charity wallet from mainnet
     async function loadPastTransactions(address) {
       const txListEl = document.getElementById('transactions-list');
       txListEl.innerHTML = 'Loading...';
-
       try {
-        const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+        const client = new xrpl.Client(XRPL_SERVER);
         await client.connect();
         const txHistory = await client.request({
           command: 'account_tx',
@@ -501,10 +483,8 @@
           limit: queryLimit
         });
         client.disconnect();
-
         const transactions = txHistory.result.transactions || [];
         txCache[address] = [];
-
         transactions.forEach((txWrapper) => {
           const tx = txWrapper.tx;
           if (tx.TransactionType === 'Payment') {
@@ -525,15 +505,13 @@
     function applyTransactionFilter(address) {
       const txListEl = document.getElementById('transactions-list');
       txListEl.innerHTML = '';
-
       let txInfoEl = document.getElementById('transactions-info');
-      if(!txInfoEl) {
+      if (!txInfoEl) {
         txInfoEl = document.createElement('div');
         txInfoEl.id = 'transactions-info';
         txInfoEl.style.marginBottom = '0.5rem';
         txListEl.parentNode.insertBefore(txInfoEl, txListEl);
       }
-
       if (!txCache[address] || txCache[address].length === 0) {
         txInfoEl.innerHTML = '0 transactions found.';
         txListEl.innerHTML = '<div class="transaction-item">No recent transactions found.</div>';
@@ -542,19 +520,15 @@
       const totalCount = txCache[address].length;
       const filterRadio = document.querySelector('input[name="txfilter"]:checked');
       const filterValue = filterRadio ? filterRadio.value : 'all';
-
       const filteredTx = txCache[address].filter((tx) => {
         if (filterValue === 'all') return true;
         return tx.direction === filterValue;
       });
-
       txInfoEl.innerHTML = `Showing ${filteredTx.length} of ${totalCount} transaction(s)`;
-
       if (filteredTx.length === 0) {
         txListEl.innerHTML = `<div class="transaction-item">No ${filterValue} transactions found.</div>`;
         return;
       }
-
       filteredTx.forEach((tx) => {
         const item = document.createElement('div');
         item.className = 'transaction-item';
@@ -568,14 +542,14 @@
       });
     }
 
-    // Leaderboard
+    // Leaderboard update
     function updateLeaderboard() {
       const board = document.getElementById('leaderboard');
       const list = document.getElementById('leaderboard-list');
       board.classList.add('active');
       list.innerHTML = '';
-      leaderboardData.sort((a,b) => b.amount - a.amount);
-      leaderboardData.slice(0,5).forEach((donor, i) => {
+      leaderboardData.sort((a, b) => b.amount - a.amount);
+      leaderboardData.slice(0, 5).forEach((donor, i) => {
         const div = document.createElement('div');
         div.className = 'leaderboard-item';
         div.innerHTML = `#${i+1} ${donor.alias} - ${donor.amount} XRP`;
@@ -583,171 +557,32 @@
       });
     }
 
-    // Check if an account is activated
-    async function isAccountActivated(address) {
-      const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
-      await client.connect();
-      try {
-        const accountInfo = await client.request({
-          command: 'account_info',
-          account: address,
-        });
-        client.disconnect();
-        return (accountInfo && accountInfo.result && accountInfo.result.account_data);
-      } catch (error) {
-        client.disconnect();
-        return false;
-      }
+    // Update progress bar based on total donations
+    function updateProgressBar() {
+      const fill = document.getElementById('progress-fill');
+      const progressText = document.getElementById('progress-text');
+      const percent = Math.min(100, (charity.totalReceived / charity.goal) * 100).toFixed(2);
+      fill.style.width = `${percent}%`;
+      progressText.textContent = `Raised ${charity.totalReceived}/${charity.goal} XRP (${percent}%)`;
     }
+    updateProgressBar();
 
-    // Donate function
-    async function donateXRP(destination, amount, memo) {
-      if (!currentWalletSeed) {
-        alert('No wallet found. Please wait for auto-initialization.');
-        return;
-      }
-      if (!destination.startsWith('r')) {
-        alert('Invalid destination address. Must begin with "r".');
-        return;
-      }
-      if (!amount || isNaN(amount) || amount <= 0) {
-        amount = 10;
-      }
+    /* ------------------ Slider and Query Limit ------------------ */
+    const queryLimitSlider = document.getElementById('query-limit-slider');
+    const queryLimitNumber = document.getElementById('query-limit-number');
 
-      const activated = await isAccountActivated(destination);
-      if (!activated) {
-        alert('Destination account is not activated. The recipient must have at least 10 XRP.');
-        return;
-      }
-
-      try {
-        const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
-        await client.connect();
-
-        const wallet = xrpl.Wallet.fromSeed(currentWalletSeed);
-        const txJson = {
-          TransactionType: 'Payment',
-          Account: wallet.classicAddress,
-          Destination: destination,
-          Amount: (amount * 1000000).toString()
-        };
-        if (memo && memo.trim()) {
-          txJson.Memos = [
-            {
-              Memo: {
-                MemoData: Buffer.from(memo, 'utf8').toString('hex')
-              }
-            }
-          ];
-        }
-
-        const prepared = await client.autofill(txJson);
-        const signed = wallet.sign(prepared);
-        const result = await client.submitAndWait(signed.tx_blob);
-
-        alert('Transaction successful! Hash: ' + result.result.hash);
-        client.disconnect();
-
-        // Increase donation progress
-        charity.totalReceived += amount;
-        updateProgressBar();
-
-        // Add to leaderboard data
-        leaderboardData.push({
-          alias: `Donor-${Math.floor(Math.random() * 1000)}`, 
-          amount: amount
-        });
-        updateLeaderboard();
-
-        // Show receipt button
-        showReceiptButton(amount, memo, result.result.hash);
-
-        // Refresh transactions after donation
-        await loadPastTransactions(destination);
-      } catch (error) {
-        alert('Error processing transaction: ' + error.message);
-      }
-    }
-
-    // Generate a text receipt
-    function generateReceipt(amount, memo, hash) {
-      const date = new Date().toLocaleString();
-      return (
-`XRP4Good Donation Receipt
-
-Charity: ${charity.name}
-Date: ${date}
-Amount: ${amount} XRP
-Memo: ${memo}
-Transaction Hash: ${hash}
-
-Thank you for supporting ${charity.name}!`
-      );
-    }
-
-    // Show receipt button
-    function showReceiptButton(amount, memo, hash) {
-      const btn = document.getElementById('receipt-button');
-      btn.style.display = 'inline-block';
-      btn.onclick = () => {
-        const content = generateReceipt(amount, memo, hash);
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Receipt-${hash}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-      };
-    }
-
-    // Auto-generate a wallet + fund from the testnet faucet
-    window.addEventListener('DOMContentLoaded', async () => {
-      const wallet = xrpl.Wallet.generate();
-      currentWalletSeed = wallet.seed;
-      currentWalletAddress = wallet.classicAddress;
-
-      try {
-        const faucetResponse = await fetch('https://faucet.altnet.rippletest.net/accounts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ destination: currentWalletAddress })
-        });
-        if (!faucetResponse.ok) {
-          throw new Error('Faucet request failed. Please try again.');
-        }
-        await waitForAccountActivation(currentWalletAddress);
-        console.log('Auto wallet initialized:', currentWalletAddress);
-      } catch (error) {
-        console.error('Error funding wallet:', error);
-      }
-
-      // Initial transaction load
-      await loadPastTransactions(charity.address);
+    // Sync slider and number field as the user adjusts them
+    queryLimitSlider.addEventListener('input', () => {
+      queryLimitNumber.value = queryLimitSlider.value;
+    });
+    queryLimitNumber.addEventListener('input', () => {
+      queryLimitSlider.value = queryLimitNumber.value;
     });
 
-    // Polling for faucet activation
-    async function waitForAccountActivation(address) {
-      const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
-      await client.connect();
-      while (true) {
-        try {
-          const response = await client.request({
-            command: 'account_info',
-            account: address,
-          });
-          if (response.result && response.result.account_data) {
-            client.disconnect();
-            return;
-          }
-        } catch (err) {
-          // keep polling
-        }
-        await new Promise(resolve => setTimeout(resolve, 4000));
-      }
-    }
+    // Update the query limit when the user finishes adjusting
+    queryLimitSlider.addEventListener('change', updateQueryLimit);
+    queryLimitNumber.addEventListener('change', updateQueryLimit);
 
-    // Update query limit from slider/number
     function updateQueryLimit() {
       let newLimit = parseInt(queryLimitNumber.value);
       if (isNaN(newLimit) || newLimit < 1) {
@@ -758,8 +593,15 @@ Thank you for supporting ${charity.name}!`
       queryLimit = newLimit;
       queryLimitSlider.value = newLimit;
       queryLimitNumber.value = newLimit;
+      // Reload transactions from the mainnet for the charity wallet
       loadPastTransactions(charity.address);
     }
+    /* ------------------------------------------------------------ */
+
+    // Initial load of charity transactions (from mainnet)
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadPastTransactions(charity.address);
+    });
   </script>
 </body>
 </html>
