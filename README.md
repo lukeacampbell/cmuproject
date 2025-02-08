@@ -2,7 +2,7 @@
 
 [https://lukeacampbell.github.io/tartanhacks/](https://lukeacampbell.github.io/tartanhacks/)
 
-This project is a proof-of-concept donation tracking system built for TartanHacks. It uses the XRP Ledger to transparently display donation transactions for charities. In its final version, the system will show every transaction along with an explanation of what the money was spent on. Future implementations may also include functionality for paying for specific projects within the charity.
+This project is a proof-of-concept donation tracking system built for TartanHacks. It uses the XRP Ledger to transparently display donation transactions for charities. In its final version, the system will show every transaction along with an explanation of what the money was spent on. Future implementations may also include functionality for paying for specific projects within the charity and voting for how your XRP is spent.
 
 ## Overview
 
