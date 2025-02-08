@@ -1,27 +1,37 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>XRP4Good - Donate to Charities with XRP</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <!-- Canvas for animated background -->
+  <canvas id="background-canvas"></canvas>
 
+  <!-- Header with full-screen dynamic background -->
   <header>
-    <div class="container">
+    <div class="header-content">
       <h1>XRP4Good</h1>
-      <p>Support important causes with transparency on the blockchain.</p>
-      <!-- Mission Statement -->
-      <p class="mission-statement">Bridging the gap between blockchain, charities, and transparency.</p>
+      <p class="tagline">Support important causes with transparency on the blockchain.</p>
+      <p class="mission-statement">
+        Bridging the gap between blockchain, charities, and transparency.
+      </p>
+      <a href="#main-content" class="scroll-down">Scroll Down</a>
     </div>
   </header>
 
-  <div class="container">
+  <!-- Main content: Charity cards load dynamically here -->
+  <main id="main-content" class="container">
     <section class="charity-list" id="charity-list">
-      <!-- Charity Cards will be loaded dynamically here -->
+      <!-- Charity Cards will be loaded dynamically via JavaScript -->
     </section>
-  </div>
+  </main>
 
   <script src="scripts.js"></script>
 </body>

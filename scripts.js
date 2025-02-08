@@ -1,23 +1,126 @@
-// Fetch the charities data from the JSON file
-fetch('charities.json')
-  .then(response => response.json())
-  .then(data => {
-    const charityList = document.getElementById('charity-list');
-    
-    data.forEach(charity => {
-      const charityCard = document.createElement('div');
-      charityCard.classList.add('charity-card');
-      
-      charityCard.innerHTML = `
-        <img src="${charity.image}" alt="${charity.name}" class="charity-image">
-        <h3>${charity.name}</h3>
-        <p>${charity.description}</p>
-        <a href="donate.html?id=${charity.id}" class="donation-button">Donate with XRP</a>
-      `;
-      
-      charityList.appendChild(charityCard);
-    });
-  })
-  .catch(error => {
-    console.error('Error loading charity data:', error);
+// Load charities and initialize the animated background once the DOM is ready
+document.addEventListener("DOMContentLoaded", function () {
+    loadCharities();
+    initBackground();
   });
+  
+  // Charity data array
+  const charities = [
+    {
+      name: "Save the Oceans",
+      description: "Help save our oceans by reducing plastic pollution.",
+      image: "images/save-oceans.jpg",
+      donationLink: "donation.html"
+    },
+    {
+      name: "Educate Kids",
+      description: "Donate to provide education to underprivileged children.",
+      image: "images/educate-kids.jpg",
+      donationLink: "donation.html"
+    },
+    {
+      name: "Fight Hunger",
+      description: "Support food programs to fight global hunger.",
+      image: "images/fight-hunger.jpg",
+      donationLink: "donation.html"
+    }
+  ];
+  
+  // Function to dynamically load charity cards
+  function loadCharities() {
+    const charityList = document.getElementById("charity-list");
+    charityList.innerHTML = ""; // Clear any existing content
+  
+    charities.forEach((charity) => {
+      const card = document.createElement("div");
+      card.className = "charity-card";
+      card.innerHTML = `
+        <img class="charity-image" src="${charity.image}" alt="${charity.name}" />
+        <div class="charity-card-content">
+          <h3>${charity.name}</h3>
+          <p>${charity.description}</p>
+          <a href="${charity.donationLink}" class="donation-button">Donate with XRP</a>
+        </div>
+      `;
+      charityList.appendChild(card);
+    });
+  }
+  
+  // Initialize animated particle background
+  function initBackground() {
+    const canvas = document.getElementById("background-canvas");
+    const ctx = canvas.getContext("2d");
+  
+    // Set canvas dimensions to match window size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  
+    let particles = [];
+    const particleCount = 100;
+  
+    // Particle constructor function
+    function Particle() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.vx = (Math.random() - 0.5) * 0.5;
+      this.vy = (Math.random() - 0.5) * 0.5;
+      this.radius = Math.random() * 2 + 1;
+      // Use a translucent version of the primary color
+      this.color = "rgba(76, 175, 80, 0.7)";
+    }
+  
+    // Create particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+  
+    // Animation loop
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+      // Update and draw each particle
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+  
+        // Wrap particles around screen edges
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+  
+        // Draw particle as a circle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+  
+      // Draw connecting lines between particles that are close enough
+      for (let i = 0; i < particleCount; i++) {
+        for (let j = i + 1; j < particleCount; j++) {
+          let dx = particles[i].x - particles[j].x;
+          let dy = particles[i].y - particles[j].y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 80) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = "rgba(76, 175, 80, 0.1)";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+  
+      requestAnimationFrame(animate);
+    }
+    animate();
+  
+    // Resize the canvas when the window is resized
+    window.addEventListener("resize", function () {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  }
+  

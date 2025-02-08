@@ -1,177 +1,164 @@
-/* Global Styles */
-* {
+/* CSS Variables for easy customization */
+:root {
+    --primary-color: #4caf50;
+    --secondary-color: #8bc34a;
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --light-text: #777777;
+  }
+  
+  /* Reset & Basic Styles */
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
-  
   body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f7f7f7;
-    color: #333;
-    line-height: 1.6;
+    font-family: 'Roboto', sans-serif;
+    background: #f5f5f5;
+    color: var(--text-color);
+    overflow-x: hidden;
   }
-  
   a {
     text-decoration: none;
     color: inherit;
   }
   
-  /* Header */
+  /* Animated Background Canvas */
+  #background-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: #0d0d0d; /* Dark backdrop for contrast */
+  }
+  
+  /* Header Styles */
   header {
-    background: linear-gradient(90deg, #4CAF50, #8BC34A);
-    color: white;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 40px 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    color: var(--bg-color);
+    padding: 20px;
+    position: relative;
+    z-index: 1;
   }
-  
-  header h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-  
-  header p {
-    font-size: 1.2rem;
-    font-weight: 400;
-  }
-  
-  /* Mission Statement Styling */
-  .mission-statement {
-    font-size: 1.5rem;
-    color: #f0f0f0;
-    font-style: italic;
-    margin-top: 20px;
-    opacity: 0.8;
+  .header-content {
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+  }
+  .header-content h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+  .tagline {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  .mission-statement {
+    font-size: 1.2rem;
+    font-style: italic;
+    opacity: 0.9;
+    margin-bottom: 30px;
+  }
+  .scroll-down {
+    font-size: 1rem;
+    background: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 25px;
+    color: var(--bg-color);
+    transition: background 0.3s ease;
+  }
+  .scroll-down:hover {
+    background: var(--secondary-color);
+  }
+  
+  /* Main Content Section */
+  main {
+    padding: 60px 20px;
+    background: var(--bg-color);
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    margin-top: -50px; /* Overlap header */
+    position: relative;
+    z-index: 1;
   }
   
   /* Container */
   .container {
-    width: 80%;
-    margin: 40px auto;
-    overflow: hidden;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
   }
   
-  /* Charity List */
+  /* Charity List Grid */
   .charity-list {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
   }
   
+  /* Charity Card Styles */
   .charity-card {
-    background-color: #fff;
-    padding: 20px;
-    width: 280px;
-    text-align: center;
+    background: var(--bg-color);
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  
   .charity-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
   }
-  
   .charity-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
   }
-  
-  .charity-card h3 {
-    font-size: 1.6rem;
+  .charity-card-content {
+    padding: 20px;
+  }
+  .charity-card-content h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
     margin-bottom: 10px;
-    color: #4CAF50;
+    color: var(--primary-color);
   }
-  
-  .charity-card p {
+  .charity-card-content p {
     font-size: 1rem;
-    color: #555;
+    color: var(--light-text);
     margin-bottom: 15px;
   }
-  
   .donation-button {
     display: inline-block;
-    background-color: #34c759;
-    color: white;
-    padding: 12px 25px;
+    background: var(--primary-color);
+    color: var(--bg-color);
+    padding: 12px 20px;
     border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.3s ease;
   }
-  
   .donation-button:hover {
-    background-color: #28a745;
+    background: var(--secondary-color);
   }
   
-  /* Transaction Details */
-  .transaction-details {
-    background-color: #fff;
-    padding: 40px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    margin-top: 40px;
-    text-align: center;
-  }
-  
-  .transaction-details h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-  
-  .transaction-card {
-    background-color: #f4f4f4;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .transaction-card h3 {
-    font-size: 1.6rem;
-    margin-bottom: 10px;
-  }
-  
-  .transaction-card p {
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  .status {
-    font-weight: bold;
-  }
-  
-  .status.success {
-    color: green;
-  }
-  
-  .status.pending {
-    color: orange;
-  }
-  
-  .status.failed {
-    color: red;
-  }
-  
-  .back-button {
-    display: inline-block;
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 20px;
-  }
-  
-  .back-button:hover {
-    background-color: #388e3c;
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .header-content h1 {
+      font-size: 3rem;
+    }
+    .tagline {
+      font-size: 1.2rem;
+    }
+    .mission-statement {
+      font-size: 1rem;
+    }
   }
   
