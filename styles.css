@@ -17,12 +17,13 @@ body {
   margin: 0;
   padding: 0;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* Background Canvas (Particles Over Everything) */
 #background-canvas {
   position: fixed;
+  pointer-events: none;
   top: 0;
   left: 0;
   width: 100%;
@@ -100,6 +101,8 @@ header {
 
 /* Modern Button */
 .donation-button {
+  position: relative;
+  z-index: 10;
   display: inline-block;
   padding: 12px 25px;
   font-size: 1rem;

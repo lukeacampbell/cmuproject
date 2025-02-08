@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.vy = (Math.random() - 0.5) * 0.5;
       this.radius = Math.random() * 2 + 1;
       // Translucent primary color
-      this.color = "rgba(76, 175, 80, 0.7)";
+      this.color = "rgba(59, 130, 246, 0.6)";
     }
   
     // Create particles
@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = "rgba(76, 175, 80, 0.1)";
+            ctx.strokeStyle = "rgba(59, 130, 246, 0.2)";
             ctx.lineWidth = 1;
             ctx.stroke();
           }
