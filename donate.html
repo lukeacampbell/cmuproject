@@ -387,7 +387,7 @@
     function updateCharityUI() {
       document.getElementById('charity-name').innerText = charity.name;
       document.getElementById('charity-desc').innerText = charity.description;
-      document.getElementById('charity-blurb').innerText = charity.description;
+      document.getElementById('charity-blurb').innerText = "";
       if (charity.destination_tag !== null) {
         document.getElementById('charity-dtag').innerText = "Destination Tag: " + charity.destination_tag;
       } else {
