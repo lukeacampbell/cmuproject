@@ -1,31 +1,33 @@
-# TartanHacks Donation Tracker Proof-of-Concept
+# TartanHacks Donation Tracker - Proof of Concept
 
-[https://lukeacampbell.github.io/tartanhacks/](https://lukeacampbell.github.io/tartanhacks/)
+🔗 **Live Demo:** [TartanHacks Donation Tracker](https://lukeacampbell.github.io/tartanhacks/)
 
-This project is a proof-of-concept donation tracking system built for TartanHacks. It uses the XRP Ledger to transparently display donation transactions for charities. In its final version, the system will show every transaction along with an explanation of what the money was spent on. Future implementations may also include functionality for paying for specific projects within the charity and voting for how your XRP is spent.
+This project is a **proof-of-concept donation tracking system** built for **TartanHacks**. It leverages the **XRP Ledger** to transparently display donation transactions for charities. In its final form, the system will provide **full transparency** by showing **every donation transaction** and explaining **how the funds are used**.
 
-## Overview
+Future enhancements may include:
+- Allowing donors to **fund specific projects** within a charity.
+- Implementing a **voting mechanism** so donors can influence how their XRP is spent.
 
-The project demonstrates the following key features:
-- **Dynamic Charity Data:**  
-  Charity details (name, description, image, XRP address, donation link, and destination tag) are stored in an external JSON file (`charities.json`) and loaded dynamically into the web page.
-  
-- **Donation QR Code Generation:**  
-  Donors can enter an XRP donation amount and an optional memo. A QR code is then generated using the charity’s mainnet XRP address (and its destination tag), enabling quick and secure donations.
+## 🔹 Key Features
 
-- **Transaction History:**  
-  The system fetches up to 10,000 transactions from the XRP mainnet for the charity’s wallet. It automatically filters these transactions to display only those that have the correct destination tag (ensuring that only relevant transactions are shown).
+### 🔹 Transparent Donation Tracking
+- The system **fetches up to 10,000 transactions** from the **XRP Ledger Mainnet**.
+- It **filters** transactions based on **destination tags** to ensure only relevant donations are displayed.
+- Donations are **sorted chronologically** (most recent first) for clarity.
 
-- **Sorting:**  
-  The filtered transactions are sorted by timestamp (most recent first) so that the latest transactions appear at the top.
+### 🔹 QR Code-Based Donations
+- Donors can **enter an amount** and an **optional memo**.
+- A **QR code** is generated dynamically using the charity's **mainnet XRP address** and **destination tag**, making donations quick and secure.
 
-## Technologies Used
+### 🔹 Dynamic Charity Data
+- Charity details (name, description, image, **XRP address**, **donation link**, and **destination tag**) are stored in an **external JSON file** (`charities.json`).
+- The website dynamically loads and displays charity information.
 
-- **HTML, CSS, JavaScript:** Frontend technologies.
-- **XRPL.js:** For interacting with the XRP Ledger.
-- **QRCode.js:** For generating QR codes.
-- **Fetch API:** To load charity data from `charities.json`.
+## 🚀 Technologies Used
+- **Frontend:** HTML, CSS, JavaScript
+- **Blockchain Integration:** XRPL.js (XRP Ledger API)
+- **QR Code Generation:** QRCode.js
+- **Data Fetching:** Fetch API (loads charity data from `charities.json`)
 
-## How to Run
-
-1. **Clone the Repository** (if using version control) or place the files in a single directory:
+## 📧 Contact
+For questions or contributions, feel free to reach out or submit an issue on GitHub! 🎉
