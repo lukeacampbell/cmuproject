@@ -1,117 +1,98 @@
 [
-    {
-      "id": 1,
-      "name": "Fighting Hunger in Africa",
-      "description": "Help provide food and aid to communities in need across Africa.",
-      "image": "pic1.jpg",
-      "xrp_address": "rMdG3ju8pgyVh29ELPWaDuA74CpWW6Fxns",
-      "donation_link": "https://bithomp.com/explorer/rMdG3ju8pgyVh29ELPWaDuA74CpWW6Fxns",
-      "destination_tag": 4287056448
-    },
-    {
-      "id": 2,
-      "name": "Save the Children",
-      "description": "Save the Children is passionately committed to one goal: Giving all children the best chance for the future they deserve – a healthy start in life, to be protected from harm and the opportunity to learn.",
-      "image": "pic4.png",
-      "xrp_address": "raBQUYdAhnnojJQ6Xi3eXztZ74ot24RDq1",
-      "donation_link": "https://bithomp.com/explorer/raBQUYdAhnnojJQ6Xi3eXztZ74ot24RDq1",
-      "destination_tag": 2044806060
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    },
-    {
-      "id": 3,
-      "name": "Providing Education to Children",
-      "description": "Support education programs that bring knowledge to children in need.",
-      "image": "pic1.jpg",
-      "xrp_address": "rZZZZZ...ZZZZZ",
-      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
-    }
-  ]
-  
+  {
+    "id": 1,
+    "name": "Save the Children",
+    "description": "An international organization that promotes children's rights, provides relief, and supports children in developing countries.",
+    "image": "savethechildren.jpg",
+    "xrp_address": "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn",
+    "donation_link": "https://www.savethechildren.org/"
+  },
+  {
+    "id": 2,
+    "name": "Doctors Without Borders",
+    "description": "An international medical humanitarian organization providing aid in crisis zones worldwide.",
+    "image": "doctorswithoutborders.jpg",
+    "xrp_address": "rDsbeomae4FXwgQTJp9Rs64Qg9vDiTCdBv",
+    "donation_link": "https://www.doctorswithoutborders.org/"
+  },
+  {
+    "id": 3,
+    "name": "World Wildlife Fund",
+    "description": "A leading organization dedicated to wilderness preservation and reducing the human impact on the environment.",
+    "image": "wwf.jpg",
+    "xrp_address": "rJHMeqKu8Ep7Fazx8MQG6JunaafBXz93YQ",
+    "donation_link": "https://www.worldwildlife.org/"
+  },
+  {
+    "id": 4,
+    "name": "UNICEF",
+    "description": "The United Nations Children's Fund provides humanitarian and developmental aid to children worldwide.",
+    "image": "unicef.jpg",
+    "xrp_address": "r4EwGsjS8tZjKzp8uQ2pS7U7aBmwYg86eC",
+    "donation_link": "https://www.unicef.org/"
+  },
+  {
+    "id": 5,
+    "name": "International Rescue Committee",
+    "description": "A global humanitarian organization that responds to the world's worst crises and helps people survive and rebuild their lives.",
+    "image": "irc.jpg",
+    "xrp_address": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
+    "donation_link": "https://www.rescue.org/"
+  },
+  {
+    "id": 6,
+    "name": "Oxfam",
+    "description": "An international confederation working to end poverty and injustice around the world.",
+    "image": "oxfam.jpg",
+    "xrp_address": "rOxfam1111111111111111111111111111",
+    "donation_link": "https://www.oxfam.org/"
+  },
+  {
+    "id": 7,
+    "name": "American Red Cross",
+    "description": "Provides emergency assistance, disaster relief, and disaster preparedness education in the United States.",
+    "image": "redcross.jpg",
+    "xrp_address": "rRedCross2222222222222222222222222222",
+    "donation_link": "https://www.redcross.org/"
+  },
+  {
+    "id": 8,
+    "name": "CARE International",
+    "description": "Works around the globe to save lives, defeat poverty and achieve social justice.",
+    "image": "care.jpg",
+    "xrp_address": "rCARE333333333333333333333333333333",
+    "donation_link": "https://www.care-international.org/"
+  },
+  {
+    "id": 9,
+    "name": "World Vision",
+    "description": "A humanitarian organization dedicated to working with children, families, and communities to overcome poverty and injustice.",
+    "image": "worldvision.jpg",
+    "xrp_address": "rWorldVision444444444444444444444444444444",
+    "donation_link": "https://www.worldvision.org/"
+  },
+  {
+    "id": 10,
+    "name": "Amnesty International",
+    "description": "Focuses on human rights and campaigns for a world where human rights are enjoyed by all.",
+    "image": "amnesty.jpg",
+    "xrp_address": "rAmnesty555555555555555555555555555555",
+    "donation_link": "https://www.amnesty.org/"
+  },
+  {
+    "id": 11,
+    "name": "UNHCR",
+    "description": "The United Nations High Commissioner for Refugees helps safeguard the rights and well‐being of refugees worldwide.",
+    "image": "unhcr.jpg",
+    "xrp_address": "rUNHCR66666666666666666666666666666666",
+    "donation_link": "https://www.unhcr.org/"
+  },
+  {
+    "id": 12,
+    "name": "Habitat for Humanity",
+    "description": "Helps families build and improve places to call home by working alongside them to build affordable housing.",
+    "image": "habitat.jpg",
+    "xrp_address": "rHabitat7777777777777777777777777777777",
+    "donation_link": "https://www.habitat.org/"
+  }
+]
