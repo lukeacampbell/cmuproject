@@ -113,6 +113,12 @@
       font-size: 1rem;
       margin-bottom: 1rem;
     }
+    /* NEW: Display Charity Destination Tag */
+    #charity-dtag {
+      font-size: 1rem;
+      color: #bfdbfe;
+      margin-bottom: 1rem;
+    }
     /* PROGRESS BAR */
     .progress-bar {
       width: 100%;
@@ -301,6 +307,8 @@
       <h2 id="charity-name">Loading Charity...</h2>
       <h4 id="charity-desc"></h4>
       <p id="charity-blurb"></p>
+      <!-- Display charity destination tag -->
+      <p id="charity-dtag"></p>
 
       <div class="progress-bar">
         <div class="progress-bar-fill" id="progress-fill"></div>
@@ -407,19 +415,20 @@
     animateBackground();
     /* ================== End Background ================== */
 
-    /* ============== XRPL & Charity Logic ============== */
-    // Mainnet endpoint
+    /* ============== XRPL & Charity Logic ================= */
+    // Use XRP mainnet endpoint
     const XRPL_SERVER = 'wss://s1.ripple.com';
     let queryLimit = 50;
     const txCache = {};
 
-    // Global charity object; will be populated from charities.json.
+    // Global charity object; populated from charities.json.
     let charity = {
       name: "",
       description: "",
       image: "",
       xrp_address: "",
       donation_link: "",
+      destination_tag: null,
       goal: 1000,
       totalReceived: 0
     };
@@ -427,12 +436,17 @@
     // Optional leaderboard data
     const leaderboardData = [];
 
-    // Update the UI based on the charity object
+    // Update the UI based on the charity object and load transactions.
     function updateCharityUI() {
       document.getElementById('charity-name').innerText = charity.name;
       document.getElementById('charity-desc').innerText = charity.description;
       document.getElementById('charity-blurb').innerText = charity.description;
-      // Reload transactions for this charity's XRP address.
+      if (charity.destination_tag !== null) {
+        document.getElementById('charity-dtag').innerText = "Destination Tag: " + charity.destination_tag;
+      } else {
+        document.getElementById('charity-dtag').innerText = "";
+      }
+      console.log("Loading transactions for address:", charity.xrp_address);
       loadPastTransactions(charity.xrp_address);
     }
 
@@ -452,6 +466,7 @@
             image: foundCharity.image,
             xrp_address: foundCharity.xrp_address,
             donation_link: foundCharity.donation_link,
+            destination_tag: foundCharity.destination_tag,
             goal: charity.goal,
             totalReceived: charity.totalReceived
           };
@@ -462,14 +477,13 @@
             image: data[0].image,
             xrp_address: data[0].xrp_address,
             donation_link: data[0].donation_link,
+            destination_tag: data[0].destination_tag,
             goal: charity.goal,
             totalReceived: charity.totalReceived
           };
         }
-        // Debug log to verify the correct XRP address is loaded:
         console.log("Loaded charity:", charity);
         updateCharityUI();
-        // Add event listeners for transaction filter radios
         const filters = document.getElementsByName('txfilter');
         filters.forEach(radio => {
           radio.addEventListener('change', () => applyTransactionFilter(charity.xrp_address));
@@ -490,6 +504,9 @@
       }
       const memo = document.getElementById('donation-memo').value.trim();
       let paymentURI = `xrpl:${charity.xrp_address}?amount=${encodeURIComponent(amount)}`;
+      if (charity.destination_tag !== null) {
+        paymentURI += `&dt=${encodeURIComponent(charity.destination_tag)}`;
+      }
       if (memo) {
         paymentURI += `&memo=${encodeURIComponent(memo)}`;
       }
@@ -510,9 +527,11 @@
     async function loadPastTransactions(address) {
       const txListEl = document.getElementById('transactions-list');
       txListEl.innerHTML = 'Loading...';
+      txCache[address] = [];
       try {
         const client = new xrpl.Client(XRPL_SERVER);
         await client.connect();
+        console.log("Fetching transactions for:", address);
         const txHistory = await client.request({
           command: 'account_tx',
           account: address,
@@ -520,18 +539,28 @@
         });
         client.disconnect();
         const transactions = txHistory.result.transactions || [];
-        txCache[address] = [];
         transactions.forEach((txWrapper) => {
           const tx = txWrapper.tx;
           if (tx.TransactionType === 'Payment') {
-            const date = tx.date ? new Date((tx.date + 946684800) * 1000).toLocaleString() : "N/A";
+            // Calculate the raw timestamp
+            const rawTimestamp = tx.date ? (tx.date + 946684800) * 1000 : 0;
+            const dateStr = tx.date ? new Date(rawTimestamp).toLocaleString() : "N/A";
             const amountXRP = Number(tx.Amount) / 1000000;
             const isOutbound = (tx.Account === address);
             const direction = isOutbound ? 'sent' : 'received';
-            let counterparty = isOutbound ? tx.Destination : tx.Account;
-            txCache[address].push({ direction, amountXRP, hash: tx.hash, date, counterparty });
+            const dtag = tx.DestinationTag || null;
+            txCache[address].push({ 
+              direction, 
+              amountXRP, 
+              hash: tx.hash, 
+              date: dateStr,
+              timestamp: rawTimestamp,
+              counterparty: isOutbound ? tx.Destination : tx.Account, 
+              destinationTag: dtag 
+            });
           }
         });
+        console.log("Fetched transactions:", txCache[address]);
         applyTransactionFilter(address);
       } catch (error) {
         txListEl.innerHTML = `<div class="transaction-item">Error loading transactions: ${error.message}</div>`;
@@ -555,12 +584,19 @@
       const totalCount = txCache[address].length;
       const filterRadio = document.querySelector('input[name="txfilter"]:checked');
       const filterValue = filterRadio ? filterRadio.value : 'all';
-      const filteredTx = txCache[address].filter(tx => {
-        return filterValue === 'all' ? true : tx.direction === filterValue;
-      });
+      let filteredTx = txCache[address].filter(tx => filterValue === 'all' ? true : tx.direction === filterValue);
+      
+      // Only keep transactions that have the charity's correct destination tag.
+      if (charity.destination_tag !== null) {
+        filteredTx = filteredTx.filter(tx => tx.destinationTag !== null && String(tx.destinationTag) === String(charity.destination_tag));
+      }
+      
+      // Sort filtered transactions by timestamp (most recent first)
+      filteredTx.sort((a, b) => b.timestamp - a.timestamp);
+      
       txInfoEl.innerHTML = `Showing ${filteredTx.length} of ${totalCount} transaction(s)`;
       if (filteredTx.length === 0) {
-        txListEl.innerHTML = `<div class="transaction-item">No ${filterValue} transactions found.</div>`;
+        txListEl.innerHTML = `<div class="transaction-item">No ${filterValue} transactions found with destination tag ${charity.destination_tag}.</div>`;
         return;
       }
       filteredTx.forEach(tx => {
@@ -570,7 +606,8 @@
           <strong>${tx.direction.toUpperCase()} ${tx.amountXRP} XRP</strong><br/>
           <em>Other Wallet:</em> ${tx.counterparty}<br/>
           <em>Hash:</em> ${tx.hash}<br/>
-          <em>Date:</em> ${tx.date}
+          <em>Date:</em> ${tx.date}<br/>
+          <em>Destination Tag:</em> ${tx.destinationTag}
         `;
         txListEl.appendChild(item);
       });
