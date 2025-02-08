@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>XRPL Charities - No User System</title>
+  <title>XRPL Charities - Direct Donation</title>
   <!-- XRPL.js deferred -->
   <script src="https://cdn.jsdelivr.net/npm/xrpl@latest" defer></script>
   <style>
@@ -13,12 +13,14 @@
       padding: 0;
       box-sizing: border-box;
     }
+
+    /* BODY + FONT */
     body {
-      font-family: Arial, sans-serif;
-      color: #fff;
-      background: #111;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background-color: #0f172a; /* Dark bluish background */
+      color: #e2e8f0;           /* Light grayish-blue text */
       min-height: 100vh;
-      overflow: auto; /* allow scrolling */
+      overflow: auto;
     }
 
     /* FULLSCREEN CANVAS BACKGROUND */
@@ -29,149 +31,126 @@
       width: 100vw;
       height: 100vh;
       z-index: -1;
-      background: #111;
+      background: #0f172a; /* fallback color */
     }
 
     /* HEADER */
     header {
       text-align: center;
       padding: 1rem;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.05); /* Slightly lighter overlay */
+      margin-bottom: 2rem;
     }
     header h1 {
-      margin: 0;
       font-size: 2rem;
+      color: #93c5fd; /* light blue text color */
+      letter-spacing: 1px;
     }
 
-    /* PAGE WRAPPERS */
+    /* PAGE WRAPPER */
     #main-content {
-      /* main content is shown by default now */
-    }
-    .container {
-      width: 80%;
-      margin: 2rem auto;
-      position: relative;
-      color: #fff;
+      width: 90%;
+      max-width: 1000px;
+      margin: 0 auto 4rem auto;
     }
 
-    /* CHARITY LIST / CARDS */
-    .charity-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+    /* ABOUT SECTION */
+    #about-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1.5rem;
+      line-height: 1.6;
       margin-bottom: 2rem;
-      justify-content: center;
-      perspective: 800px;
     }
-    .charity-card {
-      width: 220px;
-      height: 220px;
-      background-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    #about-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      color: #93c5fd;
+    }
+    .multi-currency {
+      margin-top: 1rem;
+      background: rgba(255, 255, 255, 0.07);
+      padding: 1rem;
       border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      transition: transform 0.3s;
-      position: relative;
-      transform-style: preserve-3d;
-      text-align: center;
+      font-size: 0.95rem;
     }
-    .charity-card:hover {
-      transform: translateY(-4px) rotateY(5deg);
-    }
-    .charity-card h3 {
-      margin: 0;
-      font-size: 1.2rem;
-    }
-    .charity-card p {
-      margin: 0.5rem 0;
-      font-size: 0.9rem;
-    }
-
-    /* CLONE CARD ANIMATION */
-    .card-clone {
-      position: absolute;
-      z-index: 9999;
-      left: 0;
-      top: 0;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      background-color: rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      animation: expandAndShrink 0.8s forwards ease-in-out;
-    }
-    @keyframes expandAndShrink {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(3);
-      }
-      100% {
-        transform: scale(0);
-        opacity: 0;
-      }
+    .multi-currency strong {
+      color: #bfdbfe; 
     }
 
     /* CHARITY DETAIL PAGE */
     #charity-detail {
-      display: none;
-      width: 80%;
-      margin: 2rem auto;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 8px;
       padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-      position: relative;
-    }
-    #charity-detail.show {
-      opacity: 1;
     }
     #charity-detail h2 {
       margin-top: 0;
       font-size: 1.8rem;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.5rem;
+      color: #93c5fd;
     }
     #charity-detail h4 {
       margin-top: 0.2rem;
       font-size: 1.1rem;
       font-weight: normal;
-      color: #ddd;
+      color: #bfdbfe;
+      margin-bottom: 1rem;
+    }
+    #charity-detail p {
+      line-height: 1.6;
+      font-size: 1rem;
       margin-bottom: 1rem;
     }
 
-    /* DONATION INPUT + MEMO */
+    /* PROGRESS BAR */
+    .progress-bar {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      height: 22px;
+      border-radius: 11px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background-color: #3b82f6; /* Blue fill */
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    #progress-text {
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: #bfdbfe;
+    }
+
+    /* DONATION INPUTS */
     .donation-input {
       width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #3b82f6;
       margin-bottom: 10px;
       font-size: 1rem;
-      color: #000;
+      color: #0f172a;
     }
     .memo-input {
       margin-top: 0.5rem;
       margin-bottom: 1rem;
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      color: #000;
+      border-radius: 6px;
+      border: 1px solid #3b82f6;
+      color: #0f172a;
     }
+
+    /* BUTTONS */
     .donation-btn {
       padding: 12px 24px;
-      background-color: #34c759;
+      background-color: #3b82f6;
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -181,115 +160,65 @@
       margin-right: 1rem;
     }
     .donation-btn:hover {
-      background-color: #28a745;
-    }
-
-    /* RECEIPT DOWNLOAD BUTTON */
-    .receipt-btn {
-      margin-left: 1rem;
-      padding: 8px 16px;
-      background-color: #ff8c00;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .receipt-btn:hover {
-      background-color: #e07c00;
-    }
-
-    .back-btn {
-      margin-top: 1rem;
-      padding: 8px 16px;
-      background-color: #3b82f6;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .back-btn:hover {
       background-color: #2563eb;
     }
 
-    /* PROGRESS BAR */
-    .progress-bar {
-      width: 100%;
-      background: rgba(255,255,255,0.2);
-      height: 20px;
-      border-radius: 10px;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      overflow: hidden;
-      position: relative;
+    .receipt-btn {
+      margin-left: 1rem;
+      padding: 10px 20px;
+      background-color: #06b6d4;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
     }
-    .progress-bar-fill {
-      height: 100%;
-      background-color: #34c759;
-      width: 0%;
-      transition: width 0.4s ease;
+    .receipt-btn:hover {
+      background-color: #0891b2;
     }
 
-    /* TRANSACTION HISTORY & FILTER */
+    /* TRANSACTION CONTAINER */
     #transactions-container {
       margin-top: 2rem;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.07);
       padding: 1rem;
       border-radius: 6px;
       max-height: 300px;
       overflow-y: auto;
-      clear: both;
     }
     #transactions-container h3 {
       margin-bottom: 0.5rem;
+      color: #93c5fd;
+      font-size: 1.2rem;
     }
     #filter-container {
       margin-bottom: 0.5rem;
     }
     #transactions-info {
       margin-bottom: 0.5rem;
+      color: #bfdbfe;
+      font-size: 0.9rem;
     }
     .transaction-item {
-      padding: 0.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
       font-size: 0.9rem;
+    }
+    .transaction-item strong {
+      color: #93c5fd;
+    }
+    .transaction-item em {
+      color: #bfdbfe;
     }
     .transaction-item:last-child {
       border-bottom: none;
     }
 
-    /* QUERY LIMIT CONTROLS */
-    #query-limit-container {
-      margin-top: 1rem;
-      text-align: left;
-    }
-    #query-limit {
-      width: 80px;
-      padding: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      margin-left: 0.5rem;
-      color: #000;
-    }
-    #set-limit-btn {
-      margin-left: 0.5rem;
-      padding: 6px 12px;
-      background-color: #ff8c00;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    #set-limit-btn:hover {
-      background-color: #e07c00;
-    }
-
     /* LEADERBOARD */
     #leaderboard {
       margin-top: 1rem;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.07);
       border-radius: 6px;
       padding: 1rem;
       display: none;
@@ -297,90 +226,104 @@
     #leaderboard.active {
       display: block;
     }
-    .leaderboard-item {
-      padding: 0.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
-
-    /* EDUCATIONAL / ABOUT SECTION */
-    #about-section {
-      width: 80%;
-      margin: 2rem auto;
-      background: rgba(0,0,0,0.4);
-      border-radius: 8px;
-      padding: 1.5rem;
-      line-height: 1.4;
-      font-size: 1rem;
-    }
-    #about-section h2 {
+    #leaderboard h3 {
+      color: #93c5fd;
+      font-size: 1.2rem;
       margin-bottom: 0.5rem;
     }
-    .multi-currency {
+    .leaderboard-item {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+
+    /* TX LIMIT SLIDER + NUMBER */
+    #query-limit-container {
       margin-top: 1rem;
-      background: rgba(255,255,255,0.2);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.05);
       padding: 1rem;
-      border-radius: 8px;
+      border-radius: 6px;
+      margin-top: 2rem;
+    }
+    #query-limit-label {
       font-size: 0.95rem;
+      color: #bfdbfe;
+    }
+    #query-limit-slider {
+      width: 200px;
+    }
+    #query-limit-number {
+      width: 60px;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #3b82f6;
+      color: #0f172a;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    #set-limit-btn {
+      padding: 8px 16px;
+      background-color: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+    #set-limit-btn:hover {
+      background-color: #2563eb;
     }
   </style>
 </head>
 <body>
 
-  <!-- Particle BG -->
+  <!-- Blue Particle BG -->
   <canvas id="background-canvas"></canvas>
 
   <header>
-    <h1>XRP4Good Charities (No Login)</h1>
+    <h1>XRP4Good Charities</h1>
   </header>
 
-  <!-- MAIN CONTENT (Always Visible) -->
+  <!-- MAIN CONTENT -->
   <div id="main-content">
+
     <!-- ABOUT SECTION -->
     <div id="about-section">
       <h2>How It Works</h2>
       <p>
         Every donation you send via the XRP Ledger is publicly verifiable. This means you can see exactly how
-        much each charity receives and where it’s spent.
+        much this charity receives, in near real-time. By leveraging transparent blockchain technology, 
+        donors can trust that funds are reaching the intended cause.
       </p>
       <p>
-        We provide a memo field so you can write a dedication or message. Once donated, your funds appear in the
-        charity's transaction history in near real-time.
+        Use the memo field to add a personal touch or dedication. Once donated, your transaction appears in the
+        charity’s record almost instantly.
       </p>
       <div class="multi-currency">
-        <strong>Multi-Currency Support:</strong>
-        <p>Not an XRP holder? You can still acquire XRP from most crypto exchanges or use a built-in swap if your
-        wallet supports it. Once you have XRP, send it to the donation address to participate in these campaigns.</p>
+        <strong>Multi-Currency Support</strong>
+        <p>You can acquire XRP from most crypto exchanges or use a built-in swap if your wallet supports it. 
+        Then send your XRP to the donation address below to take part in this campaign.</p>
       </div>
-    </div>
-
-    <!-- HOME PAGE with CHARITY CARDS -->
-    <div class="container" id="home-page">
-      <section class="charity-list">
-        <div class="charity-card" id="charity1-card" onclick="handleCardClick('charity1')">
-          <h3>Charity 1</h3>
-          <p>Fighting Hunger in Africa</p>
-        </div>
-        <div class="charity-card" id="charity2-card" onclick="handleCardClick('charity2')">
-          <h3>Charity 2</h3>
-          <p>Saving Ocean Wildlife</p>
-        </div>
-        <div class="charity-card" id="charity3-card" onclick="handleCardClick('charity3')">
-          <h3>Charity 3</h3>
-          <p>Providing Education to Children</p>
-        </div>
-      </section>
     </div>
 
     <!-- CHARITY DETAIL PAGE -->
     <div id="charity-detail">
       <h2 id="charity-name"></h2>
       <h4 id="charity-desc"></h4>
-      <p id="charity-blurb" style="font-size:1rem;line-height:1.4;"></p>
+      <p id="charity-blurb"></p>
 
       <div class="progress-bar">
         <div class="progress-bar-fill" id="progress-fill"></div>
       </div>
-      <p id="progress-text" style="margin-bottom:1rem; font-size:0.9rem; opacity:0.8;"></p>
+      <p id="progress-text"></p>
 
       <input type="number" id="donation-amount" class="donation-input" placeholder="Amount in XRP" />
       <textarea class="memo-input" id="donation-memo" rows="2" placeholder="Memo / Dedication (optional)"></textarea>
@@ -401,24 +344,19 @@
         <h3>Top Donors</h3>
         <div id="leaderboard-list"></div>
       </div>
-
-      <button class="back-btn" onclick="goBackHome()">Back to Home</button>
     </div>
 
-    <!-- WALLET + QUERY LIMIT -->
-    <div class="container wallet-section">
-      <button class="generate-button" onclick="generateWallet()">Generate New Test Wallet</button>
-      <div id="query-limit-container">
-        <label>Tx Limit (1-1000):
-          <input type="number" id="query-limit" min="1" max="1000" value="50" />
-        </label>
-        <button id="set-limit-btn" onclick="updateQueryLimit()">Set Limit</button>
-      </div>
+    <!-- WALLET + QUERY LIMIT (Slider + Number) -->
+    <div id="query-limit-container">
+      <div id="query-limit-label">Tx Limit (1-1000):</div>
+      <input type="range" id="query-limit-slider" min="1" max="1000" step="1" value="50" />
+      <input type="number" id="query-limit-number" min="1" max="1000" value="50" />
+      <button id="set-limit-btn" onclick="updateQueryLimit()">Set Limit</button>
     </div>
   </div>
 
   <script>
-    /* ====================== Particle BG ====================== */
+    /* ====================== Blue Particle BG ====================== */
     const canvas = document.getElementById('background-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -435,14 +373,15 @@
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
         this.radius = Math.random() * 2 + 1;
-        this.color = 'rgba(76,175,80,0.7)';
+        this.color = 'rgba(59, 130, 246, 0.6)'; // A nice blue
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
+        // Wrap around edges
         if (this.x < 0) this.x = canvas.width;
         if (this.x > canvas.width) this.x = 0;
         if (this.y < 0) this.y = canvas.height;
@@ -466,17 +405,17 @@
         p.update();
         p.draw();
       });
-      // Connect lines
+      // Connect lines if within a certain distance
       for (let i = 0; i < particleCount; i++) {
         for (let j = i + 1; j < particleCount; j++) {
-          let dx = particles[i].x - particles[j].x;
-          let dy = particles[i].y - particles[j].y;
-          let distance = Math.sqrt(dx * dx + dy * dy);
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
           if (distance < 80) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = 'rgba(76,175,80,0.1)';
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.2)';
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -489,168 +428,66 @@
 
     /* ============== XRPL + Charity Logic ============== */
     let queryLimit = 50;
-    let currentCharityAddress = null;
     let currentWalletSeed = null;
     let currentWalletAddress = null;
     const txCache = {};
 
-    const charities = {
-      'charity1': {
-        name: 'Charity 1',
-        desc: 'Fighting Hunger in Africa',
-        blurb: 'We are committed to providing meals... Africa.',
-        address: 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
-        goal: 1000,
-        totalReceived: 0
-      },
-      'charity2': {
-        name: 'Charity 2',
-        desc: 'Saving Ocean Wildlife',
-        blurb: 'Our mission is to protect marine life... worldwide.',
-        address: 'rNaZcryNZSc5LBk4o6co9ghagtna1gAgBP',
-        goal: 5000,
-        totalReceived: 0
-      },
-      'charity3': {
-        name: 'Charity 3',
-        desc: 'Providing Education to Children',
-        blurb: 'We believe every child deserves quality education...',
-        address: 'rZZZZZ...ZZZZZ',
-        goal: 2000,
-        totalReceived: 0
-      }
+    // Single charity details
+    const charity = {
+      name: 'Charity 1',
+      desc: 'Fighting Hunger in Africa',
+      blurb: 'We are committed to providing meals and resources to families across Africa. With your help, we can improve health outcomes, promote food security, and drive sustainable change in vulnerable communities.',
+      address: 'rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
+      goal: 1000,
+      totalReceived: 0
     };
 
-    const leaderboardData = {
-      'charity1': [],
-      'charity2': [],
-      'charity3': []
+    // Leaderboard data
+    const leaderboardData = [];
+
+    // Populate the UI with single charity data
+    document.getElementById('charity-name').innerText = charity.name;
+    document.getElementById('charity-desc').innerText = charity.desc;
+    document.getElementById('charity-blurb').innerText = charity.blurb;
+
+    // Donation button
+    const donationBtn = document.getElementById('donation-button');
+    donationBtn.onclick = () => {
+      const amount = Number(document.getElementById('donation-amount').value);
+      const memo = document.getElementById('donation-memo').value;
+      donateXRP(charity.address, amount, memo);
     };
 
-    window.handleCardClick = handleCardClick;
+    // Receipt button hidden by default
+    document.getElementById('receipt-button').style.display = 'none';
 
-    function handleCardClick(charityKey) {
-      const card = document.getElementById(`${charityKey}-card`);
-      const rect = card.getBoundingClientRect();
-      const clone = card.cloneNode(true);
-      clone.classList.add('card-clone');
-      clone.style.width = `${rect.width}px`;
-      clone.style.height = `${rect.height}px`;
-      clone.style.left = `${rect.left + window.scrollX}px`;
-      clone.style.top = `${rect.top + window.scrollY}px`;
-      document.body.appendChild(clone);
+    // Listen to transaction filter changes
+    const filters = document.getElementsByName('txfilter');
+    filters.forEach((radio) => {
+      radio.addEventListener('change', () => applyTransactionFilter(charity.address));
+    });
 
-      clone.addEventListener('animationend', () => {
-        document.body.removeChild(clone);
-        openCharityPage(charityKey);
-      });
-    }
+    // Set up slider + number input sync
+    const queryLimitSlider = document.getElementById('query-limit-slider');
+    const queryLimitNumber = document.getElementById('query-limit-number');
 
-    async function openCharityPage(charityKey) {
-      document.getElementById('home-page').style.display = 'none';
-      const detail = document.getElementById('charity-detail');
-      detail.style.display = 'block';
-      // trigger reflow before applying .show
-      detail.offsetHeight; 
-      detail.classList.add('show');
+    queryLimitSlider.oninput = function() {
+      queryLimitNumber.value = this.value;
+    };
+    queryLimitNumber.oninput = function() {
+      queryLimitSlider.value = this.value;
+    };
 
-      const c = charities[charityKey];
-      currentCharityAddress = c.address;
-
-      document.getElementById('charity-name').innerText = c.name;
-      document.getElementById('charity-desc').innerText = c.desc;
-      document.getElementById('charity-blurb').innerText = c.blurb;
-
-      updateProgressBar(charityKey);
-
-      // Attach filter event
-      const filters = document.getElementsByName('txfilter');
-      filters.forEach((radio) => {
-        radio.removeEventListener('change', filterChange);
-        radio.addEventListener('change', filterChange);
-      });
-
-      await loadPastTransactions(c.address);
-
-      const donationBtn = document.getElementById('donation-button');
-      donationBtn.onclick = () => {
-        const amount = Number(document.getElementById('donation-amount').value);
-        const memo = document.getElementById('donation-memo').value;
-        donateXRP(c.address, amount, memo, charityKey);
-      };
-
-      // Hide receipt until donation is made
-      document.getElementById('receipt-button').style.display = 'none';
-    }
-
-    function filterChange() {
-      applyTransactionFilter(currentCharityAddress);
-    }
-
-    function goBackHome() {
-      const detail = document.getElementById('charity-detail');
-      detail.classList.remove('show');
-      setTimeout(() => {
-        detail.style.display = 'none';
-        document.getElementById('home-page').style.display = 'block';
-        currentCharityAddress = null;
-      }, 500);
-    }
-
-    function updateProgressBar(charityKey) {
-      const c = charities[charityKey];
+    function updateProgressBar() {
       const fill = document.getElementById('progress-fill');
       const progressText = document.getElementById('progress-text');
-      const percent = Math.min(100, (c.totalReceived / c.goal) * 100).toFixed(2);
+      const percent = Math.min(100, (charity.totalReceived / charity.goal) * 100).toFixed(2);
       fill.style.width = `${percent}%`;
-      progressText.textContent = `Raised ${c.totalReceived}/${c.goal} XRP (${percent}%)`;
+      progressText.textContent = `Raised ${charity.totalReceived}/${charity.goal} XRP (${percent}%)`;
     }
+    updateProgressBar();
 
-    function generateReceipt(charityKey, amount, memo, hash) {
-      const c = charities[charityKey];
-      const date = new Date().toLocaleString();
-      return (
-`XRP4Good Donation Receipt
-
-Charity: ${c.name}
-Date: ${date}
-Amount: ${amount} XRP
-Memo: ${memo}
-Transaction Hash: ${hash}
-
-Thank you for supporting ${c.name}!`
-      );
-    }
-
-    function showReceiptButton(charityKey, amount, memo, hash) {
-      const btn = document.getElementById('receipt-button');
-      btn.style.display = 'inline-block';
-      btn.onclick = () => {
-        const content = generateReceipt(charityKey, amount, memo, hash);
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Receipt-${hash}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-      };
-    }
-
-    function updateLeaderboard(charityKey) {
-      const board = document.getElementById('leaderboard');
-      const list = document.getElementById('leaderboard-list');
-      board.classList.add('active');
-      list.innerHTML = '';
-      leaderboardData[charityKey].sort((a,b) => b.amount - a.amount);
-      leaderboardData[charityKey].slice(0,5).forEach((donor, i) => {
-        const div = document.createElement('div');
-        div.className = 'leaderboard-item';
-        div.innerHTML = `#${i+1} ${donor.alias} - ${donor.amount} XRP`;
-        list.appendChild(div);
-      });
-    }
-
+    // Load the charity's past transactions
     async function loadPastTransactions(address) {
       const txListEl = document.getElementById('transactions-list');
       txListEl.innerHTML = 'Loading...';
@@ -694,8 +531,7 @@ Thank you for supporting ${c.name}!`
         txInfoEl = document.createElement('div');
         txInfoEl.id = 'transactions-info';
         txInfoEl.style.marginBottom = '0.5rem';
-        const container = txListEl.parentNode;
-        container.insertBefore(txInfoEl, txListEl);
+        txListEl.parentNode.insertBefore(txInfoEl, txListEl);
       }
 
       if (!txCache[address] || txCache[address].length === 0) {
@@ -723,7 +559,7 @@ Thank you for supporting ${c.name}!`
         const item = document.createElement('div');
         item.className = 'transaction-item';
         item.innerHTML = `
-          <strong>${tx.direction.toUpperCase()} ${tx.amountXRP} XRP</strong> <br/>
+          <strong>${tx.direction.toUpperCase()} ${tx.amountXRP} XRP</strong><br/>
           <em>Other Wallet:</em> ${tx.counterparty}<br/>
           <em>Hash:</em> ${tx.hash}<br/>
           <em>Date:</em> ${tx.date}
@@ -732,73 +568,22 @@ Thank you for supporting ${c.name}!`
       });
     }
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      // auto-generate a wallet for demonstration
-      const wallet = xrpl.Wallet.generate();
-      currentWalletSeed = wallet.seed;
-      currentWalletAddress = wallet.classicAddress;
-
-      try {
-        const faucetResponse = await fetch('https://faucet.altnet.rippletest.net/accounts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ destination: currentWalletAddress })
-        });
-        if (!faucetResponse.ok) {
-          throw new Error('Faucet request failed. Please try again.');
-        }
-        await waitForAccountActivation(currentWalletAddress);
-        console.log('Auto wallet initialized:', currentWalletAddress);
-      } catch (error) {
-        console.error('Error funding wallet:', error);
-      }
-    });
-
-    async function generateWallet() {
-      const wallet = xrpl.Wallet.generate();
-      currentWalletSeed = wallet.seed;
-      currentWalletAddress = wallet.classicAddress;
-      alert(`New Wallet Generated!
-Address: ${currentWalletAddress}
-Seed: ${currentWalletSeed}
-
-Requesting test funds...`);
-
-      try {
-        const faucetResponse = await fetch('https://faucet.altnet.rippletest.net/accounts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ destination: currentWalletAddress })
-        });
-        if (!faucetResponse.ok) {
-          throw new Error('Faucet request failed. Please try again.');
-        }
-        alert('Testnet faucet request sent. Waiting for account activation...');
-        await waitForAccountActivation(currentWalletAddress);
-        alert('Wallet funded and activated! You can now donate XRP.');
-      } catch (error) {
-        alert('Error funding wallet: ' + error);
-      }
+    // Leaderboard
+    function updateLeaderboard() {
+      const board = document.getElementById('leaderboard');
+      const list = document.getElementById('leaderboard-list');
+      board.classList.add('active');
+      list.innerHTML = '';
+      leaderboardData.sort((a,b) => b.amount - a.amount);
+      leaderboardData.slice(0,5).forEach((donor, i) => {
+        const div = document.createElement('div');
+        div.className = 'leaderboard-item';
+        div.innerHTML = `#${i+1} ${donor.alias} - ${donor.amount} XRP`;
+        list.appendChild(div);
+      });
     }
 
-    async function waitForAccountActivation(address) {
-      const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
-      await client.connect();
-      while (true) {
-        try {
-          const response = await client.request({
-            command: 'account_info',
-            account: address,
-          });
-          if (response.result && response.result.account_data) {
-            client.disconnect();
-            return;
-          }
-        } catch (err) {}
-        await new Promise(resolve => setTimeout(resolve, 5000));
-      }
-    }
-
+    // Check if an account is activated
     async function isAccountActivated(address) {
       const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
       await client.connect();
@@ -815,13 +600,14 @@ Requesting test funds...`);
       }
     }
 
-    async function donateXRP(destination, amount, memo, charityKey) {
+    // Donate function
+    async function donateXRP(destination, amount, memo) {
       if (!currentWalletSeed) {
-        alert('No wallet found. Please generate a test wallet or wait for auto-initialization.');
+        alert('No wallet found. Please wait for auto-initialization.');
         return;
       }
       if (!destination.startsWith('r')) {
-        alert('Invalid destination address. Must begin with r');
+        alert('Invalid destination address. Must begin with "r".');
         return;
       }
       if (!amount || isNaN(amount) || amount <= 0) {
@@ -839,7 +625,7 @@ Requesting test funds...`);
         await client.connect();
 
         const wallet = xrpl.Wallet.fromSeed(currentWalletSeed);
-        let txJson = {
+        const txJson = {
           TransactionType: 'Payment',
           Account: wallet.classicAddress,
           Destination: destination,
@@ -863,15 +649,18 @@ Requesting test funds...`);
         client.disconnect();
 
         // Increase donation progress
-        charities[charityKey].totalReceived += amount;
-        updateProgressBar(charityKey);
+        charity.totalReceived += amount;
+        updateProgressBar();
 
         // Add to leaderboard data
-        leaderboardData[charityKey].push({alias: `Donor-${Math.floor(Math.random()*1000)}`, amount});
-        updateLeaderboard(charityKey);
+        leaderboardData.push({
+          alias: `Donor-${Math.floor(Math.random() * 1000)}`, 
+          amount: amount
+        });
+        updateLeaderboard();
 
         // Show receipt button
-        showReceiptButton(charityKey, amount, memo, result.result.hash);
+        showReceiptButton(amount, memo, result.result.hash);
 
         // Refresh transactions after donation
         await loadPastTransactions(destination);
@@ -880,21 +669,97 @@ Requesting test funds...`);
       }
     }
 
+    // Generate a text receipt
+    function generateReceipt(amount, memo, hash) {
+      const date = new Date().toLocaleString();
+      return (
+`XRP4Good Donation Receipt
+
+Charity: ${charity.name}
+Date: ${date}
+Amount: ${amount} XRP
+Memo: ${memo}
+Transaction Hash: ${hash}
+
+Thank you for supporting ${charity.name}!`
+      );
+    }
+
+    // Show receipt button
+    function showReceiptButton(amount, memo, hash) {
+      const btn = document.getElementById('receipt-button');
+      btn.style.display = 'inline-block';
+      btn.onclick = () => {
+        const content = generateReceipt(amount, memo, hash);
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Receipt-${hash}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+    }
+
+    // Auto-generate a wallet + fund from the testnet faucet
+    window.addEventListener('DOMContentLoaded', async () => {
+      const wallet = xrpl.Wallet.generate();
+      currentWalletSeed = wallet.seed;
+      currentWalletAddress = wallet.classicAddress;
+
+      try {
+        const faucetResponse = await fetch('https://faucet.altnet.rippletest.net/accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ destination: currentWalletAddress })
+        });
+        if (!faucetResponse.ok) {
+          throw new Error('Faucet request failed. Please try again.');
+        }
+        await waitForAccountActivation(currentWalletAddress);
+        console.log('Auto wallet initialized:', currentWalletAddress);
+      } catch (error) {
+        console.error('Error funding wallet:', error);
+      }
+
+      // Initial transaction load
+      await loadPastTransactions(charity.address);
+    });
+
+    // Polling for faucet activation
+    async function waitForAccountActivation(address) {
+      const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+      await client.connect();
+      while (true) {
+        try {
+          const response = await client.request({
+            command: 'account_info',
+            account: address,
+          });
+          if (response.result && response.result.account_data) {
+            client.disconnect();
+            return;
+          }
+        } catch (err) {
+          // keep polling
+        }
+        await new Promise(resolve => setTimeout(resolve, 4000));
+      }
+    }
+
+    // Update query limit from slider/number
     function updateQueryLimit() {
-      const limitInput = document.getElementById('query-limit');
-      let newLimit = parseInt(limitInput.value);
+      let newLimit = parseInt(queryLimitNumber.value);
       if (isNaN(newLimit) || newLimit < 1) {
         newLimit = 50;
       } else if (newLimit > 1000) {
         newLimit = 1000;
       }
       queryLimit = newLimit;
-      limitInput.value = newLimit;
-      if (currentCharityAddress) {
-        loadPastTransactions(currentCharityAddress);
-      }
+      queryLimitSlider.value = newLimit;
+      queryLimitNumber.value = newLimit;
+      loadPastTransactions(charity.address);
     }
   </script>
-
 </body>
 </html>
