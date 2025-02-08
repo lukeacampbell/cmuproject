@@ -18,32 +18,33 @@
     /* BODY & FONT */
     body {
       font-family: "Helvetica Neue", Arial, sans-serif;
-      background-color: #0f172a;
+      background: #000; /* Fallback background */
       color: #e2e8f0;
       min-height: 100vh;
       overflow: auto;
+      position: relative;
     }
-    /* FULLSCREEN CANVAS BACKGROUND */
+    /* The canvas for the changing tides background */
     #background-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: -1;
-      background: #0f172a;
+      z-index: -2;
     }
     /* HEADER */
     header {
       position: relative;
       text-align: center;
       padding: 1rem;
-      background: rgba(255,255,255,0.05);
+      background: rgba(0, 0, 0, 0.3);
       margin-bottom: 2rem;
+      z-index: 1;
     }
     header h1 {
       font-size: 2rem;
-      color: #93c5fd;
+      color: #bbe1fa;
       letter-spacing: 1px;
     }
     #back-button {
@@ -65,10 +66,12 @@
       width: 90%;
       max-width: 1000px;
       margin: 0 auto 4rem auto;
+      position: relative;
+      z-index: 1;
     }
     /* ABOUT SECTION */
     #about-section {
-      background: rgba(255,255,255,0.05);
+      background: rgba(0, 0, 0, 0.5);
       border-radius: 8px;
       padding: 1.5rem;
       line-height: 1.6;
@@ -77,11 +80,11 @@
     #about-section h2 {
       font-size: 1.8rem;
       margin-bottom: 0.5rem;
-      color: #93c5fd;
+      color: #bbe1fa;
     }
     .multi-currency {
       margin-top: 1rem;
-      background: rgba(255,255,255,0.07);
+      background: rgba(0, 0, 0, 0.5);
       padding: 1rem;
       border-radius: 8px;
       font-size: 0.95rem;
@@ -91,16 +94,16 @@
     }
     /* CHARITY DETAIL PAGE */
     #charity-detail {
-      background: rgba(255,255,255,0.05);
+      background: rgba(0, 0, 0, 0.5);
       border-radius: 8px;
       padding: 20px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.7);
       margin-bottom: 2rem;
     }
     #charity-detail h2 {
       font-size: 1.8rem;
       margin-bottom: 0.5rem;
-      color: #93c5fd;
+      color: #bbe1fa;
     }
     #charity-detail h4 {
       font-size: 1.1rem;
@@ -113,7 +116,7 @@
       font-size: 1rem;
       margin-bottom: 1rem;
     }
-    /* NEW: Display Charity Destination Tag */
+    /* Display Charity Destination Tag */
     #charity-dtag {
       font-size: 1rem;
       color: #bfdbfe;
@@ -198,7 +201,7 @@
     }
     #transactions-container h3 {
       margin-bottom: 0.5rem;
-      color: #93c5fd;
+      color: #bbe1fa;
       font-size: 1.2rem;
     }
     #filter-container {
@@ -215,7 +218,7 @@
       font-size: 0.9rem;
     }
     .transaction-item strong {
-      color: #93c5fd;
+      color: #bbe1fa;
     }
     .transaction-item em {
       color: #bfdbfe;
@@ -235,7 +238,7 @@
       display: block;
     }
     #leaderboard h3 {
-      color: #93c5fd;
+      color: #bbe1fa;
       font-size: 1.2rem;
       margin-bottom: 0.5rem;
     }
@@ -249,7 +252,7 @@
   </style>
 </head>
 <body>
-  <!-- Blue Particle Background -->
+  <!-- Changing Tides Background -->
   <canvas id="background-canvas"></canvas>
 
   <header>
@@ -262,7 +265,7 @@
     <div id="about-section">
       <h2>How It Works</h2>
       <p>
-        Every donation you send via the XRP Ledger is publicly verifiable. This means you can see exactly how much a charity receives—in near real-time. By leveraging transparent blockchain technology, donors can trust that funds are reaching the intended cause.
+        Every donation you send via the XRP Ledger is publicly verifiable. This means you can see exactly how much a charity receives—in near real-time. Transparent blockchain technology ensures that donors know their funds are being put to good use.
       </p>
       <p>
         Use the memo field to add a personal touch or dedication. Once donated, your transaction appears in the charity’s record almost instantly.
@@ -280,7 +283,6 @@
       <h2 id="charity-name">Loading Charity...</h2>
       <h4 id="charity-desc"></h4>
       <p id="charity-blurb"></p>
-      <!-- Display charity destination tag -->
       <p id="charity-dtag"></p>
 
       <div class="progress-bar">
@@ -320,71 +322,50 @@
   </div>
 
   <script>
-    /* ====================== Blue Particle Background ====================== */
+    /* ====================== Changing Tides Background ====================== */
     const canvas = document.getElementById('background-canvas');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-    const particleCount = 100;
+    let time = 0;
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.4;
-        this.vy = (Math.random() - 0.5) * 0.4;
-        this.radius = Math.random() * 2 + 1;
-        this.color = 'rgba(59, 130, 246, 0.6)';
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0) this.x = canvas.width;
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-        if (this.y > canvas.height) this.y = 0;
-      }
-      draw() {
+    function animateTides() {
+      time += 0.5;
+      // Create a vertical gradient that evokes water tones.
+      let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, "#0f4c75");   // Dark blue
+      gradient.addColorStop(0.5, "#3282b8");   // Medium blue
+      gradient.addColorStop(1, "#bbe1fa");     // Light blue
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Draw waves.
+      ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+      for (let i = 0; i < 3; i++) {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
+        let waveAmplitude = 20 + i * 10;
+        let yOffset = canvas.height/2 + i * 30;
+        ctx.moveTo(0, yOffset);
+        for (let x = 0; x <= canvas.width; x += 10) {
+          let y = waveAmplitude * Math.sin((x + time + i * 50) * 0.02) + yOffset;
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
+        ctx.closePath();
         ctx.fill();
       }
+      requestAnimationFrame(animateTides);
     }
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-    function animateBackground() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      for (let i = 0; i < particleCount; i++) {
-        for (let j = i + 1; j < particleCount; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 80) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = 'rgba(59, 130, 246, 0.2)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animateBackground);
-    }
-    animateBackground();
-    /* ================== End Background ================== */
+    animateTides();
+    /* ================== End Changing Tides Background ================== */
 
     /* ============== XRPL & Charity Logic ================= */
     // Use XRP mainnet endpoint and fetch up to 10,000 transactions.
     const XRPL_SERVER = 'wss://s1.ripple.com';
-    const queryLimit = 100000;  // Fixed query limit of 10,000 transactions.
+    const queryLimit = 10000;
     const txCache = {};
 
     // Global charity object; populated from charities.json.
@@ -414,6 +395,7 @@
       }
       console.log("Loading transactions for address:", charity.xrp_address);
       loadPastTransactions(charity.xrp_address);
+      subscribeToAccount(charity.xrp_address);
     }
 
     // Load charity data from charities.json
@@ -489,6 +471,51 @@
     });
     /* ---------------------------------------------------- */
 
+    /* ---------------- Real-Time Subscription ---------------- */
+    async function subscribeToAccount(address) {
+      try {
+        const client = new xrpl.Client(XRPL_SERVER);
+        await client.connect();
+        // Subscribe to transactions for the given address.
+        await client.request({
+          command: "subscribe",
+          accounts: [address]
+        });
+        console.log("Subscribed to real-time transactions for:", address);
+        client.on("message", (message) => {
+          if (message.type === "transaction") {
+            const tx = message.transaction;
+            if (tx.TransactionType === "Payment") {
+              const dtag = tx.DestinationTag || null;
+              // Process only if the transaction has the charity's destination tag.
+              if (charity.destination_tag !== null && String(dtag) === String(charity.destination_tag)) {
+                const rawTimestamp = tx.date ? (tx.date + 946684800) * 1000 : 0;
+                const dateStr = tx.date ? new Date(rawTimestamp).toLocaleString() : "N/A";
+                const amountXRP = Number(tx.Amount) / 1000000;
+                const isOutbound = (tx.Account === address);
+                const direction = isOutbound ? 'sent' : 'received';
+                const newTx = { 
+                  direction, 
+                  amountXRP, 
+                  hash: tx.hash, 
+                  date: dateStr,
+                  timestamp: rawTimestamp,
+                  counterparty: isOutbound ? tx.Destination : tx.Account,
+                  destinationTag: dtag 
+                };
+                txCache[address].unshift(newTx);
+                console.log("Received new transaction:", newTx);
+                applyTransactionFilter(address);
+              }
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Subscription error:", error);
+      }
+    }
+    /* ---------------------------------------------------- */
+
     /* ---------------- Transactions from Mainnet ---------------- */
     async function loadPastTransactions(address) {
       const txListEl = document.getElementById('transactions-list');
@@ -520,7 +547,7 @@
               hash: tx.hash, 
               date: dateStr,
               timestamp: rawTimestamp,
-              counterparty: isOutbound ? tx.Destination : tx.Account, 
+              counterparty: isOutbound ? tx.Destination : tx.Account,
               destinationTag: dtag 
             });
           }
@@ -534,10 +561,8 @@
     function applyTransactionFilter(address) {
       const txListEl = document.getElementById('transactions-list');
       txListEl.innerHTML = '';
-      // Filter: Only keep transactions with the charity's destination tag.
-      let filteredTx = txCache[address].filter(tx => {
-        return tx.destinationTag !== null && String(tx.destinationTag) === String(charity.destination_tag);
-      });
+      // Only include transactions that have the charity's destination tag.
+      let filteredTx = txCache[address].filter(tx => tx.destinationTag !== null && String(tx.destinationTag) === String(charity.destination_tag));
       // Sort by timestamp (most recent first)
       filteredTx.sort((a, b) => b.timestamp - a.timestamp);
       if (filteredTx.length === 0) {
