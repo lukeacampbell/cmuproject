@@ -38,7 +38,7 @@
       position: relative;
       text-align: center;
       padding: 1rem;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       margin-bottom: 2rem;
     }
     header h1 {
@@ -318,7 +318,7 @@
         <div id="qr-code-container"></div>
       </div>
 
-      <!-- (Optional) Receipt and transaction display -->
+      <!-- (Optional) Receipt and Transaction Display -->
       <button class="receipt-btn" id="receipt-button" style="display:none;">Download Receipt</button>
 
       <div id="transactions-container">
@@ -408,12 +408,12 @@
     /* ================== End Background ================== */
 
     /* ============== XRPL & Charity Logic ============== */
-    // Use mainnet endpoint
+    // Mainnet endpoint
     const XRPL_SERVER = 'wss://s1.ripple.com';
     let queryLimit = 50;
     const txCache = {};
 
-    // Global charity object; it will be populated from charities.json.
+    // Global charity object; will be populated from charities.json.
     let charity = {
       name: "",
       description: "",
@@ -424,7 +424,7 @@
       totalReceived: 0
     };
 
-    // Leaderboard data (optional)
+    // Optional leaderboard data
     const leaderboardData = [];
 
     // Update the UI based on the charity object
@@ -432,7 +432,7 @@
       document.getElementById('charity-name').innerText = charity.name;
       document.getElementById('charity-desc').innerText = charity.description;
       document.getElementById('charity-blurb').innerText = charity.description;
-      // Load past transactions using the charity's XRP address
+      // Reload transactions for this charity's XRP address.
       loadPastTransactions(charity.xrp_address);
     }
 
@@ -441,12 +441,9 @@
       try {
         const response = await fetch('charities.json');
         const data = await response.json();
-        // Read charity id from query string (?id=)
         const urlParams = new URLSearchParams(window.location.search);
         const idParam = urlParams.get('id');
-        // Default to the first charity if no valid id is provided
         let charityId = idParam ? parseInt(idParam) : data[0].id;
-        // Find charity by id (if multiple charities have the same id, choose the first match)
         const foundCharity = data.find(c => c.id === charityId);
         if (foundCharity) {
           charity = {
@@ -469,13 +466,19 @@
             totalReceived: charity.totalReceived
           };
         }
+        // Debug log to verify the correct XRP address is loaded:
+        console.log("Loaded charity:", charity);
         updateCharityUI();
+        // Add event listeners for transaction filter radios
+        const filters = document.getElementsByName('txfilter');
+        filters.forEach(radio => {
+          radio.addEventListener('change', () => applyTransactionFilter(charity.xrp_address));
+        });
       } catch (error) {
         console.error("Error loading charities.json:", error);
         document.getElementById('charity-name').innerText = "Error loading charity data.";
       }
     }
-    // Load charity data when the page loads
     window.addEventListener('DOMContentLoaded', loadCharityData);
 
     /* ---------------- QR CODE GENERATION ---------------- */
@@ -486,15 +489,12 @@
         return;
       }
       const memo = document.getElementById('donation-memo').value.trim();
-      // Build the payment URI using the charity's XRP address from the JSON data.
       let paymentURI = `xrpl:${charity.xrp_address}?amount=${encodeURIComponent(amount)}`;
       if (memo) {
         paymentURI += `&memo=${encodeURIComponent(memo)}`;
       }
-      // Clear any existing QR code.
       const qrContainer = document.getElementById('qr-code-container');
       qrContainer.innerHTML = "";
-      // Create a new canvas to render the QR code.
       const canvasElem = document.createElement("canvas");
       qrContainer.appendChild(canvasElem);
       QRCode.toCanvas(canvasElem, paymentURI, { width: 200 }, function (error) {
@@ -524,10 +524,10 @@
         transactions.forEach((txWrapper) => {
           const tx = txWrapper.tx;
           if (tx.TransactionType === 'Payment') {
+            const date = tx.date ? new Date((tx.date + 946684800) * 1000).toLocaleString() : "N/A";
             const amountXRP = Number(tx.Amount) / 1000000;
             const isOutbound = (tx.Account === address);
             const direction = isOutbound ? 'sent' : 'received';
-            const date = new Date((tx.date + 946684800) * 1000).toLocaleString();
             let counterparty = isOutbound ? tx.Destination : tx.Account;
             txCache[address].push({ direction, amountXRP, hash: tx.hash, date, counterparty });
           }
@@ -555,16 +555,15 @@
       const totalCount = txCache[address].length;
       const filterRadio = document.querySelector('input[name="txfilter"]:checked');
       const filterValue = filterRadio ? filterRadio.value : 'all';
-      const filteredTx = txCache[address].filter((tx) => {
-        if (filterValue === 'all') return true;
-        return tx.direction === filterValue;
+      const filteredTx = txCache[address].filter(tx => {
+        return filterValue === 'all' ? true : tx.direction === filterValue;
       });
       txInfoEl.innerHTML = `Showing ${filteredTx.length} of ${totalCount} transaction(s)`;
       if (filteredTx.length === 0) {
         txListEl.innerHTML = `<div class="transaction-item">No ${filterValue} transactions found.</div>`;
         return;
       }
-      filteredTx.forEach((tx) => {
+      filteredTx.forEach(tx => {
         const item = document.createElement('div');
         item.className = 'transaction-item';
         item.innerHTML = `
@@ -626,7 +625,6 @@
       queryLimit = newLimit;
       queryLimitSlider.value = newLimit;
       queryLimitNumber.value = newLimit;
-      // Reload transactions using the charity's XRP address from the JSON data.
       loadPastTransactions(charity.xrp_address);
     }
     /* ---------------------------------------------------- */
