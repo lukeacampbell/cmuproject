@@ -9,20 +9,20 @@ document.addEventListener("DOMContentLoaded", function () {
     {
       name: "Save the Oceans",
       description: "Help save our oceans by reducing plastic pollution.",
-      image: "images/save-oceans.jpg",
-      donationLink: "donation.html"
+      image: "pic2.jpg",
+      donationLink: "donate.html"
     },
     {
       name: "Educate Kids",
       description: "Donate to provide education to underprivileged children.",
-      image: "images/educate-kids.jpg",
-      donationLink: "donation.html"
+      image: "pic1.jpg",
+      donationLink: "donate.html"
     },
     {
       name: "Fight Hunger",
       description: "Support food programs to fight global hunger.",
-      image: "images/fight-hunger.jpg",
-      donationLink: "donation.html"
+      image: "pic1.jpg",
+      donationLink: "donate.html"
     }
   ];
   
