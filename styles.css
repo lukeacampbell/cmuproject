@@ -117,6 +117,168 @@ header {
   background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
   transform: scale(1.05);
 }
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(var(--glass-blur));
+  text-align: center;
+}
+
+.auth-container h2 {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 1rem;
+  color: var(--text-color);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--primary-color);
+  font-size: 1rem;
+  color: var(--background-color);
+}
+
+#toggle-form {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+#toggle-form a {
+  color: var(--primary-color);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.auth-btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  transform: scale(1.05);
+}
+/* Styles for the auth.html page only */
+/* Apply styles only to auth.html */
+.auth-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--background-color);
+  overflow: hidden;
+}
+
+/* Centered login/register box */
+.auth-container {
+  width: 420px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(var(--glass-blur));
+  text-align: center;
+}
+
+/* Title */
+.auth-container h2 {
+  font-size: 2.2rem;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+/* Ensure inputs are centered and uniform */
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.input-group input {
+  width: 100%;
+  max-width: 350px;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 1.1rem;
+  color: var(--text-color);
+  outline: none;
+  text-align: center;
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Neon button */
+.neon-btn {
+  width: 100%;
+  max-width: 350px;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* Remove hover movement */
+.auth-container:hover {
+  transform: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Button hover effect */
+.neon-btn:hover {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  box-shadow: 0 0 15px var(--secondary-color);
+  transform: scale(1.05);
+}
+
+/* Toggle login/register link */
+#toggle-form {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+#toggle-form a {
+  color: var(--primary-color);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

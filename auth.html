@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <h2 id="form-title">Login</h2>
+
+        <div class="input-group">
+            <input type="email" id="email" required placeholder="Email">
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="password" required placeholder="Password">
+        </div>
+
+        <button id="auth-button" class="neon-btn">Login</button>
+        <p id="toggle-form">Don't have an account? <a href="#">Register</a></p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const formTitle = document.getElementById("form-title");
+            const authButton = document.getElementById("auth-button");
+            const toggleForm = document.getElementById("toggle-form");
+
+            let isRegistering = false;
+
+            toggleForm.addEventListener("click", function (event) {
+                event.preventDefault();
+                isRegistering = !isRegistering;
+
+                if (isRegistering) {
+                    formTitle.textContent = "Register";
+                    authButton.textContent = "Register";
+                    toggleForm.innerHTML = 'Already have an account? <a href="#">Login</a>';
+                } else {
+                    formTitle.textContent = "Login";
+                    authButton.textContent = "Login";
+                    toggleForm.innerHTML = "Don't have an account? <a href='#'>Register</a>";
+                }
+            });
+
+            authButton.addEventListener("click", function () {
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+
+                if (!email || !password) {
+                    alert("Please enter both email and password.");
+                    return;
+                }
+
+                if (isRegistering) {
+                    if (localStorage.getItem(email)) {
+                        alert("User already exists. Try logging in.");
+                    } else {
+                        localStorage.setItem(email, JSON.stringify({ password }));
+                        alert("Registration successful! Please log in.");
+                        toggleForm.click();
+                    }
+                } else {
+                    const userData = JSON.parse(localStorage.getItem(email));
+                    if (userData && userData.password === password) {
+                        alert("Login successful!");
+                        localStorage.setItem("loggedInUser", email);
+                        window.location.href = "index.html"; 
+                    } else {
+                        alert("Invalid email or password.");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

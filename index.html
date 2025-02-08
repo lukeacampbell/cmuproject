@@ -20,6 +20,10 @@
       <h1>XRP4Good</h1>
       <p class="tagline">Support important causes with transparency on the blockchain.</p>
       <p class="mission-statement">Bridging the gap between blockchain, charities, and transparency.</p>
+      <!-- Login/Logout Button -->
+      <button id="auth-button" class="auth-btn">Login</button>
+
+    
     </div>
   </header>
 
@@ -29,7 +33,69 @@
       <!-- Charity Cards will be loaded dynamically via JavaScript -->
     </section>
   </main>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchCharities();
+        initAuthButton();
+    });
 
+    function fetchCharities() {
+        fetch("charities.json")
+            .then(response => response.json())
+            .then(data => {
+                displayCharities(data);
+            })
+            .catch(error => console.error("Error loading charity data:", error));
+    }
+
+    function displayCharities(charities) {
+        const charityList = document.getElementById("charity-list");
+        charityList.innerHTML = "";
+
+        charities.forEach((charity) => {
+            const card = document.createElement("div");
+            card.className = "charity-card";
+            card.innerHTML = `
+                <img class="charity-image" src="${charity.image}" alt="${charity.name}" />
+                <div class="charity-card-content">
+                    <h3>${charity.name}</h3>
+                    <p>${charity.description}</p>
+                    <a href="donate.html?id=${charity.id}" class="donation-button" onclick="return checkLogin();">Donate with XRP</a>
+                </div>
+            `;
+            charityList.appendChild(card);
+        });
+    }
+
+    function checkLogin() {
+        const user = localStorage.getItem("loggedInUser");
+        if (!user) {
+            alert("You must log in before donating!");
+            window.location.href = "auth.html";
+            return false;
+        }
+        return true;
+    }
+
+    function initAuthButton() {
+        const authButton = document.getElementById("auth-button");
+        const user = localStorage.getItem("loggedInUser");
+
+        if (user) {
+            authButton.textContent = "Logout";
+            authButton.onclick = function () {
+                localStorage.removeItem("loggedInUser");
+                alert("You have logged out.");
+                window.location.reload();
+            };
+        } else {
+            authButton.textContent = "Login";
+            authButton.onclick = function () {
+                window.location.href = "auth.html";
+            };
+        }
+    }
+  </script>
   <script src="scripts.js"></script>
 </body>
 </html>
