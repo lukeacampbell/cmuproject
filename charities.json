@@ -10,11 +10,12 @@
     },
     {
       "id": 2,
-      "name": "Saving Ocean Wildlife",
+      "name": "Save the Children",
       "description": "Support initiatives to protect ocean ecosystems and marine life.",
-      "image": "pic2.jpg",
-      "xrp_address": "rYYYYY...YYYYY",
-      "donation_link": "https://bithomp.com/explorer/rYYYYY"
+      "image": "pic4.png",
+      "xrp_address": "raBQUYdAhnnojJQ6Xi3eXztZ74ot24RDq1",
+      "donation_link": "https://bithomp.com/explorer/rYYYYY",
+      "destination_tag": 2044806060
     },
     {
       "id": 3,

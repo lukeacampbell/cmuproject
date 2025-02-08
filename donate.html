@@ -246,33 +246,6 @@
     .leaderboard-item:last-child {
       border-bottom: none;
     }
-    /* TX LIMIT SLIDER + NUMBER */
-    #query-limit-container {
-      margin-top: 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      background: rgba(255,255,255,0.05);
-      padding: 1rem;
-      border-radius: 6px;
-    }
-    #query-limit-label {
-      font-size: 0.95rem;
-      color: #bfdbfe;
-    }
-    #query-limit-slider {
-      width: 200px;
-    }
-    #query-limit-number {
-      width: 60px;
-      padding: 6px;
-      border-radius: 4px;
-      border: 1px solid #3b82f6;
-      color: #0f172a;
-      font-size: 0.9rem;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
@@ -344,13 +317,6 @@
         <div id="leaderboard-list"></div>
       </div>
     </div>
-
-    <!-- TX LIMIT (Slider + Number) -->
-    <div id="query-limit-container">
-      <div id="query-limit-label">Tx Limit (1-1000):</div>
-      <input type="range" id="query-limit-slider" min="1" max="1000" step="1" value="50" />
-      <input type="number" id="query-limit-number" min="1" max="1000" value="50" />
-    </div>
   </div>
 
   <script>
@@ -416,9 +382,9 @@
     /* ================== End Background ================== */
 
     /* ============== XRPL & Charity Logic ================= */
-    // Use XRP mainnet endpoint
+    // Use XRP mainnet endpoint and fetch up to 10,000 transactions.
     const XRPL_SERVER = 'wss://s1.ripple.com';
-    let queryLimit = 50;
+    const queryLimit = 100000;  // Fixed query limit of 10,000 transactions.
     const txCache = {};
 
     // Global charity object; populated from charities.json.
@@ -542,7 +508,6 @@
         transactions.forEach((txWrapper) => {
           const tx = txWrapper.tx;
           if (tx.TransactionType === 'Payment') {
-            // Calculate the raw timestamp
             const rawTimestamp = tx.date ? (tx.date + 946684800) * 1000 : 0;
             const dateStr = tx.date ? new Date(rawTimestamp).toLocaleString() : "N/A";
             const amountXRP = Number(tx.Amount) / 1000000;
@@ -569,34 +534,14 @@
     function applyTransactionFilter(address) {
       const txListEl = document.getElementById('transactions-list');
       txListEl.innerHTML = '';
-      let txInfoEl = document.getElementById('transactions-info');
-      if (!txInfoEl) {
-        txInfoEl = document.createElement('div');
-        txInfoEl.id = 'transactions-info';
-        txInfoEl.style.marginBottom = '0.5rem';
-        txListEl.parentNode.insertBefore(txInfoEl, txListEl);
-      }
-      if (!txCache[address] || txCache[address].length === 0) {
-        txInfoEl.innerHTML = '0 transactions found.';
-        txListEl.innerHTML = '<div class="transaction-item">No recent transactions found.</div>';
-        return;
-      }
-      const totalCount = txCache[address].length;
-      const filterRadio = document.querySelector('input[name="txfilter"]:checked');
-      const filterValue = filterRadio ? filterRadio.value : 'all';
-      let filteredTx = txCache[address].filter(tx => filterValue === 'all' ? true : tx.direction === filterValue);
-      
-      // Only keep transactions that have the charity's correct destination tag.
-      if (charity.destination_tag !== null) {
-        filteredTx = filteredTx.filter(tx => tx.destinationTag !== null && String(tx.destinationTag) === String(charity.destination_tag));
-      }
-      
-      // Sort filtered transactions by timestamp (most recent first)
+      // Filter: Only keep transactions with the charity's destination tag.
+      let filteredTx = txCache[address].filter(tx => {
+        return tx.destinationTag !== null && String(tx.destinationTag) === String(charity.destination_tag);
+      });
+      // Sort by timestamp (most recent first)
       filteredTx.sort((a, b) => b.timestamp - a.timestamp);
-      
-      txInfoEl.innerHTML = `Showing ${filteredTx.length} of ${totalCount} transaction(s)`;
       if (filteredTx.length === 0) {
-        txListEl.innerHTML = `<div class="transaction-item">No ${filterValue} transactions found with destination tag ${charity.destination_tag}.</div>`;
+        txListEl.innerHTML = `<div class="transaction-item">No transactions found with destination tag ${charity.destination_tag}.</div>`;
         return;
       }
       filteredTx.forEach(tx => {
@@ -639,31 +584,6 @@
       progressText.textContent = `Raised ${charity.totalReceived}/${charity.goal} XRP (${percent}%)`;
     }
     updateProgressBar();
-    /* ---------------------------------------------------- */
-
-    /* ---------------- Slider and Query Limit ---------------- */
-    const queryLimitSlider = document.getElementById('query-limit-slider');
-    const queryLimitNumber = document.getElementById('query-limit-number');
-    queryLimitSlider.addEventListener('input', () => {
-      queryLimitNumber.value = queryLimitSlider.value;
-    });
-    queryLimitNumber.addEventListener('input', () => {
-      queryLimitSlider.value = queryLimitNumber.value;
-    });
-    queryLimitSlider.addEventListener('change', updateQueryLimit);
-    queryLimitNumber.addEventListener('change', updateQueryLimit);
-    function updateQueryLimit() {
-      let newLimit = parseInt(queryLimitNumber.value);
-      if (isNaN(newLimit) || newLimit < 1) {
-        newLimit = 50;
-      } else if (newLimit > 1000) {
-        newLimit = 1000;
-      }
-      queryLimit = newLimit;
-      queryLimitSlider.value = newLimit;
-      queryLimitNumber.value = newLimit;
-      loadPastTransactions(charity.xrp_address);
-    }
     /* ---------------------------------------------------- */
   </script>
 </body>
