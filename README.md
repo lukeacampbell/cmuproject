@@ -1,4 +1,4 @@
-# TartanHacks Donation Tracker - Proof of Concept
+# TartanHacks XRP Donation Website
 
 🔗 **Live Demo:** [TartanHacks Donation Tracker](https://lukeacampbell.github.io/tartanhacks/)
 
