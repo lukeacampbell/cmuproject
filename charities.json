@@ -5,31 +5,35 @@
     "description": "An international organization that promotes children's rights, provides relief, and supports children in developing countries.",
     "image": "images/pic4.png",
     "xrp_address": "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn",
-    "donation_link": "https://www.savethechildren.org/"
+    "donation_link": "https://www.savethechildren.org/",
+    "destination_tag": 2044806060
   },
   {
     "id": 2,
     "name": "Doctors Without Borders",
     "description": "An international medical humanitarian organization providing aid in crisis zones worldwide.",
     "image": "images/pic3.jpg",
-    "xrp_address": "rDsbeomae4FXwgQTJp9Rs64Qg9vDiTCdBv",
-    "donation_link": "https://www.doctorswithoutborders.org/"
+    "xrp_address": "raBQUYdAhnnojJQ6Xi3eXztZ74ot24RDq1",
+    "donation_link": "https://www.doctorswithoutborders.org/",
+    "destination_tag": 2178526233
   },
   {
     "id": 3,
     "name": "World Wildlife Fund",
     "description": "A leading organization dedicated to wilderness preservation and reducing the human impact on the environment.",
     "image": "images/pic2.jpg",
-    "xrp_address": "rJHMeqKu8Ep7Fazx8MQG6JunaafBXz93YQ",
-    "donation_link": "https://www.worldwildlife.org/"
+    "xrp_address": "rMdG3ju8pgyVh29ELPWaDuA74CpWW6FxnsQ",
+    "donation_link": "https://www.worldwildlife.org/",
+    "destination_tag":4287056448
   },
   {
     "id": 4,
     "name": "UNICEF",
     "description": "The United Nations Children's Fund provides humanitarian and developmental aid to children worldwide.",
     "image": "images/pic5.png",
-    "xrp_address": "r4EwGsjS8tZjKzp8uQ2pS7U7aBmwYg86eC",
-    "donation_link": "https://www.unicef.org/"
+    "xrp_address": "raBQUYdAhnnojJQ6Xi3eXztZ74ot24RDq1",
+    "donation_link": "https://www.unicef.org/",
+    "destination_tag":65719880
   },
   {
     "id": 5,
