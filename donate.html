@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>XRPL Charities - Direct Donation via QR Code</title>
+  <title>Donate - XRPL Charities</title>
   <!-- XRPL.js -->
   <script src="https://cdn.jsdelivr.net/npm/xrpl@latest"></script>
   <!-- QRCode.js Library for generating QR codes -->
@@ -15,7 +15,7 @@
       padding: 0;
       box-sizing: border-box;
     }
-    /* BODY + FONT */
+    /* BODY & FONT */
     body {
       font-family: "Helvetica Neue", Arial, sans-serif;
       background-color: #0f172a;
@@ -35,6 +35,7 @@
     }
     /* HEADER */
     header {
+      position: relative;
       text-align: center;
       padding: 1rem;
       background: rgba(255, 255, 255, 0.05);
@@ -45,6 +46,20 @@
       color: #93c5fd;
       letter-spacing: 1px;
     }
+    #back-button {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      padding: 8px 16px;
+      background-color: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #back-button:hover {
+      background-color: #2563eb;
+    }
     /* PAGE WRAPPER */
     #main-content {
       width: 90%;
@@ -53,7 +68,7 @@
     }
     /* ABOUT SECTION */
     #about-section {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       border-radius: 8px;
       padding: 1.5rem;
       line-height: 1.6;
@@ -66,29 +81,28 @@
     }
     .multi-currency {
       margin-top: 1rem;
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255,255,255,0.07);
       padding: 1rem;
       border-radius: 8px;
       font-size: 0.95rem;
     }
     .multi-currency strong {
-      color: #bfdbfe; 
+      color: #bfdbfe;
     }
     /* CHARITY DETAIL PAGE */
     #charity-detail {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       border-radius: 8px;
       padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      margin-bottom: 2rem;
     }
     #charity-detail h2 {
-      margin-top: 0;
       font-size: 1.8rem;
       margin-bottom: 0.5rem;
       color: #93c5fd;
     }
     #charity-detail h4 {
-      margin-top: 0.2rem;
       font-size: 1.1rem;
       font-weight: normal;
       color: #bfdbfe;
@@ -121,30 +135,23 @@
       color: #bfdbfe;
     }
     /* DONATION INPUTS */
-    .donation-input {
+    .donation-input, .memo-input {
       width: 100%;
       padding: 12px;
       border-radius: 6px;
       border: 1px solid #3b82f6;
-      margin-bottom: 10px;
       font-size: 1rem;
       color: #0f172a;
+      margin-bottom: 10px;
     }
     .memo-input {
       margin-top: 0.5rem;
       margin-bottom: 1rem;
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #3b82f6;
-      color: #0f172a;
+      resize: vertical;
     }
     /* BUTTONS */
-    .donation-btn {
+    .donation-btn, .receipt-btn {
       padding: 12px 24px;
-      background-color: #3b82f6;
-      color: #fff;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -152,19 +159,16 @@
       transition: background-color 0.2s;
       margin-right: 1rem;
     }
+    .donation-btn {
+      background-color: #3b82f6;
+      color: #fff;
+    }
     .donation-btn:hover {
       background-color: #2563eb;
     }
     .receipt-btn {
-      margin-left: 1rem;
-      padding: 10px 20px;
       background-color: #06b6d4;
       color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background-color 0.2s;
     }
     .receipt-btn:hover {
       background-color: #0891b2;
@@ -239,7 +243,6 @@
     /* TX LIMIT SLIDER + NUMBER */
     #query-limit-container {
       margin-top: 2rem;
-      text-align: left;
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -267,37 +270,35 @@
   </style>
 </head>
 <body>
-  <!-- Blue Particle BG -->
+  <!-- Blue Particle Background -->
   <canvas id="background-canvas"></canvas>
 
   <header>
-    <h1>XRP4Good Charities</h1>
+    <button id="back-button" onclick="window.history.back()">Back</button>
+    <h1>XRPL Charities</h1>
   </header>
 
-  <!-- MAIN CONTENT -->
   <div id="main-content">
     <!-- ABOUT SECTION -->
     <div id="about-section">
       <h2>How It Works</h2>
       <p>
-        Every donation you send via the XRP Ledger is publicly verifiable. This means you can see exactly how
-        much this charity receives, in near real-time. By leveraging transparent blockchain technology, 
-        donors can trust that funds are reaching the intended cause.
+        Every donation you send via the XRP Ledger is publicly verifiable. This means you can see exactly how much a charity receives—in near real-time. By leveraging transparent blockchain technology, donors can trust that funds are reaching the intended cause.
       </p>
       <p>
-        Use the memo field to add a personal touch or dedication. Once donated, your transaction appears in the
-        charity’s record almost instantly.
+        Use the memo field to add a personal touch or dedication. Once donated, your transaction appears in the charity’s record almost instantly.
       </p>
       <div class="multi-currency">
         <strong>Multi-Currency Support</strong>
-        <p>You can acquire XRP from most crypto exchanges or use a built-in swap if your wallet supports it. 
-        Then send your XRP to the donation address below to take part in this campaign.</p>
+        <p>
+          You can acquire XRP from most crypto exchanges or use a built-in swap if your wallet supports it. Then send your XRP to the charity below to take part in this campaign.
+        </p>
       </div>
     </div>
 
     <!-- CHARITY DETAIL PAGE -->
     <div id="charity-detail">
-      <h2 id="charity-name"></h2>
+      <h2 id="charity-name">Loading Charity...</h2>
       <h4 id="charity-desc"></h4>
       <p id="charity-blurb"></p>
 
@@ -309,10 +310,9 @@
       <!-- Donation Inputs -->
       <input type="number" id="donation-amount" class="donation-input" placeholder="Amount in XRP" />
       <textarea class="memo-input" id="donation-memo" rows="2" placeholder="Memo / Dedication (optional)"></textarea>
-      <!-- Generate a QR code for the payment -->
       <button class="donation-btn" id="generate-qr-btn">Generate Payment QR Code</button>
       
-      <!-- QR Code Display Section -->
+      <!-- QR Code Display -->
       <div id="qr-code-section">
         <h4>Scan this QR Code to Donate</h4>
         <div id="qr-code-container"></div>
@@ -346,19 +346,17 @@
   </div>
 
   <script>
-    /* ====================== Blue Particle BG ====================== */
+    /* ====================== Blue Particle Background ====================== */
     const canvas = document.getElementById('background-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
     const particleCount = 100;
-
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
@@ -383,17 +381,12 @@
         ctx.fill();
       }
     }
-
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
     }
-
     function animateBackground() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        p.update();
-        p.draw();
-      });
+      particles.forEach(p => { p.update(); p.draw(); });
       for (let i = 0; i < particleCount; i++) {
         for (let j = i + 1; j < particleCount; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -412,33 +405,80 @@
       requestAnimationFrame(animateBackground);
     }
     animateBackground();
-    /* ================== End Particle BG ================== */
+    /* ================== End Background ================== */
 
-    /* ============== XRPL + Charity Logic ============== */
-    // Set the mainnet endpoint for XRP
+    /* ============== XRPL & Charity Logic ============== */
+    // Use mainnet endpoint
     const XRPL_SERVER = 'wss://s1.ripple.com';
     let queryLimit = 50;
     const txCache = {};
 
-    // Charity details (using the mainnet address)
-    const charity = {
-      name: 'Charity 1',
-      desc: 'Fighting Hunger in Africa',
-      blurb: 'We are committed to providing meals and resources to families across Africa. With your help, we can improve health outcomes, promote food security, and drive sustainable change in vulnerable communities.',
-      address: 'rMdG3ju8pgyVh29ELPWaDuA74CpWW6Fxns',
+    // Global charity object; it will be populated from charities.json.
+    let charity = {
+      name: "",
+      description: "",
+      image: "",
+      xrp_address: "",
+      donation_link: "",
       goal: 1000,
       totalReceived: 0
     };
 
-    // Leaderboard data
+    // Leaderboard data (optional)
     const leaderboardData = [];
 
-    // Populate the UI with charity data
-    document.getElementById('charity-name').innerText = charity.name;
-    document.getElementById('charity-desc').innerText = charity.desc;
-    document.getElementById('charity-blurb').innerText = charity.blurb;
+    // Update the UI based on the charity object
+    function updateCharityUI() {
+      document.getElementById('charity-name').innerText = charity.name;
+      document.getElementById('charity-desc').innerText = charity.description;
+      document.getElementById('charity-blurb').innerText = charity.description;
+      // Load past transactions using the charity's XRP address
+      loadPastTransactions(charity.xrp_address);
+    }
 
-    // ---------------- QR CODE GENERATION ----------------
+    // Load charity data from charities.json
+    async function loadCharityData() {
+      try {
+        const response = await fetch('charities.json');
+        const data = await response.json();
+        // Read charity id from query string (?id=)
+        const urlParams = new URLSearchParams(window.location.search);
+        const idParam = urlParams.get('id');
+        // Default to the first charity if no valid id is provided
+        let charityId = idParam ? parseInt(idParam) : data[0].id;
+        // Find charity by id (if multiple charities have the same id, choose the first match)
+        const foundCharity = data.find(c => c.id === charityId);
+        if (foundCharity) {
+          charity = {
+            name: foundCharity.name,
+            description: foundCharity.description,
+            image: foundCharity.image,
+            xrp_address: foundCharity.xrp_address,
+            donation_link: foundCharity.donation_link,
+            goal: charity.goal,
+            totalReceived: charity.totalReceived
+          };
+        } else {
+          charity = {
+            name: data[0].name,
+            description: data[0].description,
+            image: data[0].image,
+            xrp_address: data[0].xrp_address,
+            donation_link: data[0].donation_link,
+            goal: charity.goal,
+            totalReceived: charity.totalReceived
+          };
+        }
+        updateCharityUI();
+      } catch (error) {
+        console.error("Error loading charities.json:", error);
+        document.getElementById('charity-name').innerText = "Error loading charity data.";
+      }
+    }
+    // Load charity data when the page loads
+    window.addEventListener('DOMContentLoaded', loadCharityData);
+
+    /* ---------------- QR CODE GENERATION ---------------- */
     document.getElementById('generate-qr-btn').addEventListener('click', () => {
       const amount = document.getElementById('donation-amount').value.trim();
       if (!amount || isNaN(amount) || Number(amount) <= 0) {
@@ -446,21 +486,17 @@
         return;
       }
       const memo = document.getElementById('donation-memo').value.trim();
-      // Construct the payment URI using the charity address on mainnet
-      let paymentURI = `xrpl:${charity.address}?amount=${encodeURIComponent(amount)}`;
+      // Build the payment URI using the charity's XRP address from the JSON data.
+      let paymentURI = `xrpl:${charity.xrp_address}?amount=${encodeURIComponent(amount)}`;
       if (memo) {
         paymentURI += `&memo=${encodeURIComponent(memo)}`;
       }
-      
-      // Clear any existing QR code
+      // Clear any existing QR code.
       const qrContainer = document.getElementById('qr-code-container');
       qrContainer.innerHTML = "";
-      
-      // Create a new canvas element to host the QR code
+      // Create a new canvas to render the QR code.
       const canvasElem = document.createElement("canvas");
       qrContainer.appendChild(canvasElem);
-      
-      // Generate the QR code (200px wide) on the canvas element
       QRCode.toCanvas(canvasElem, paymentURI, { width: 200 }, function (error) {
         if (error) {
           console.error("QR Code generation error:", error);
@@ -468,9 +504,9 @@
         }
       });
     });
-    // ----------------------------------------------------
+    /* ---------------------------------------------------- */
 
-    // Load past transactions for the charity wallet from mainnet
+    /* ---------------- Transactions from Mainnet ---------------- */
     async function loadPastTransactions(address) {
       const txListEl = document.getElementById('transactions-list');
       txListEl.innerHTML = 'Loading...';
@@ -501,7 +537,6 @@
         txListEl.innerHTML = `<div class="transaction-item">Error loading transactions: ${error.message}</div>`;
       }
     }
-
     function applyTransactionFilter(address) {
       const txListEl = document.getElementById('transactions-list');
       txListEl.innerHTML = '';
@@ -541,8 +576,9 @@
         txListEl.appendChild(item);
       });
     }
+    /* ---------------------------------------------------- */
 
-    // Leaderboard update
+    /* ---------------- Leaderboard (Optional) ---------------- */
     function updateLeaderboard() {
       const board = document.getElementById('leaderboard');
       const list = document.getElementById('leaderboard-list');
@@ -556,8 +592,9 @@
         list.appendChild(div);
       });
     }
+    /* ---------------------------------------------------- */
 
-    // Update progress bar based on total donations
+    /* ---------------- Update Progress Bar ---------------- */
     function updateProgressBar() {
       const fill = document.getElementById('progress-fill');
       const progressText = document.getElementById('progress-text');
@@ -566,23 +603,19 @@
       progressText.textContent = `Raised ${charity.totalReceived}/${charity.goal} XRP (${percent}%)`;
     }
     updateProgressBar();
+    /* ---------------------------------------------------- */
 
-    /* ------------------ Slider and Query Limit ------------------ */
+    /* ---------------- Slider and Query Limit ---------------- */
     const queryLimitSlider = document.getElementById('query-limit-slider');
     const queryLimitNumber = document.getElementById('query-limit-number');
-
-    // Sync slider and number field as the user adjusts them
     queryLimitSlider.addEventListener('input', () => {
       queryLimitNumber.value = queryLimitSlider.value;
     });
     queryLimitNumber.addEventListener('input', () => {
       queryLimitSlider.value = queryLimitNumber.value;
     });
-
-    // Update the query limit when the user finishes adjusting
     queryLimitSlider.addEventListener('change', updateQueryLimit);
     queryLimitNumber.addEventListener('change', updateQueryLimit);
-
     function updateQueryLimit() {
       let newLimit = parseInt(queryLimitNumber.value);
       if (isNaN(newLimit) || newLimit < 1) {
@@ -593,15 +626,10 @@
       queryLimit = newLimit;
       queryLimitSlider.value = newLimit;
       queryLimitNumber.value = newLimit;
-      // Reload transactions from the mainnet for the charity wallet
-      loadPastTransactions(charity.address);
+      // Reload transactions using the charity's XRP address from the JSON data.
+      loadPastTransactions(charity.xrp_address);
     }
-    /* ------------------------------------------------------------ */
-
-    // Initial load of charity transactions (from mainnet)
-    window.addEventListener('DOMContentLoaded', async () => {
-      await loadPastTransactions(charity.address);
-    });
+    /* ---------------------------------------------------- */
   </script>
 </body>
 </html>
