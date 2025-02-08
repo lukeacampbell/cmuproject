@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "name": "Fighting Hunger in Africa",
+      "description": "Help provide food and aid to communities in need across Africa.",
+      "image": "pic1.jpg",
+      "xrp_address": "rXXXXX...XXXXX",
+      "donation_link": "https://bithomp.com/explorer/rXXXXX"
+    },
+    {
+      "id": 2,
+      "name": "Saving Ocean Wildlife",
+      "description": "Support initiatives to protect ocean ecosystems and marine life.",
+      "image": "pic2.jpg",
+      "xrp_address": "rYYYYY...YYYYY",
+      "donation_link": "https://bithomp.com/explorer/rYYYYY"
+    },
+    {
+      "id": 3,
+      "name": "Providing Education to Children",
+      "description": "Support education programs that bring knowledge to children in need.",
+      "image": "charity3.jpg",
+      "xrp_address": "rZZZZZ...ZZZZZ",
+      "donation_link": "https://bithomp.com/explorer/rZZZZZ"
+    }
+  ]
+  

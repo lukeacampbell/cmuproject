@@ -1,0 +1,177 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* Header */
+  header {
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  header h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  header p {
+    font-size: 1.2rem;
+    font-weight: 400;
+  }
+  
+  /* Mission Statement Styling */
+  .mission-statement {
+    font-size: 1.5rem;
+    color: #f0f0f0;
+    font-style: italic;
+    margin-top: 20px;
+    opacity: 0.8;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Container */
+  .container {
+    width: 80%;
+    margin: 40px auto;
+    overflow: hidden;
+  }
+  
+  /* Charity List */
+  .charity-list {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .charity-card {
+    background-color: #fff;
+    padding: 20px;
+    width: 280px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .charity-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .charity-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .charity-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #4CAF50;
+  }
+  
+  .charity-card p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+  .donation-button {
+    display: inline-block;
+    background-color: #34c759;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .donation-button:hover {
+    background-color: #28a745;
+  }
+  
+  /* Transaction Details */
+  .transaction-details {
+    background-color: #fff;
+    padding: 40px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-top: 40px;
+    text-align: center;
+  }
+  
+  .transaction-details h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .transaction-card {
+    background-color: #f4f4f4;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .transaction-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+  
+  .transaction-card p {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .status {
+    font-weight: bold;
+  }
+  
+  .status.success {
+    color: green;
+  }
+  
+  .status.pending {
+    color: orange;
+  }
+  
+  .status.failed {
+    color: red;
+  }
+  
+  .back-button {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  .back-button:hover {
+    background-color: #388e3c;
+  }
+  
