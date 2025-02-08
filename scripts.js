@@ -58,14 +58,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let particles = [];
     const particleCount = 100;
   
-    // Particle constructor function
+    // Particle constructor
     function Particle() {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
       this.vx = (Math.random() - 0.5) * 0.5;
       this.vy = (Math.random() - 0.5) * 0.5;
       this.radius = Math.random() * 2 + 1;
-      // Use a translucent version of the primary color
+      // Translucent primary color
       this.color = "rgba(76, 175, 80, 0.7)";
     }
   
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.fill();
       });
   
-      // Draw connecting lines between particles that are close enough
+      // Draw lines between particles that are near one another
       for (let i = 0; i < particleCount; i++) {
         for (let j = i + 1; j < particleCount; j++) {
           let dx = particles[i].x - particles[j].x;
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     animate();
   
-    // Resize the canvas when the window is resized
+    // Adjust canvas size on window resize
     window.addEventListener("resize", function () {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;

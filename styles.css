@@ -65,25 +65,12 @@
     opacity: 0.9;
     margin-bottom: 30px;
   }
-  .scroll-down {
-    font-size: 1rem;
-    background: var(--primary-color);
-    padding: 10px 20px;
-    border-radius: 25px;
-    color: var(--bg-color);
-    transition: background 0.3s ease;
-  }
-  .scroll-down:hover {
-    background: var(--secondary-color);
-  }
   
   /* Main Content Section */
+  /* Notice: The main content is now transparent so that only the charity cards have a box */
   main {
     padding: 60px 20px;
-    background: var(--bg-color);
-    border-top-left-radius: 50px;
-    border-top-right-radius: 50px;
-    margin-top: -50px; /* Overlap header */
+    /* Removed background and border radii */
     position: relative;
     z-index: 1;
   }
@@ -103,17 +90,18 @@
     margin-bottom: 40px;
   }
   
-  /* Charity Card Styles */
+  /* Charity Card Styling (Glassmorphism Effect) */
   .charity-card {
-    background: var(--bg-color);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   .charity-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   }
   .charity-image {
     width: 100%;
